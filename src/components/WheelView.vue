@@ -2,7 +2,7 @@
   <div class="wheel-container" :style="{ background: currentBackground }">
     <div id="tsparticles"></div>
 
-    <!-- 顶部导航栏 -->
+    <!-- 顶部导航栏（圆角矩形、半透明、80%宽度） -->
     <nav class="top-nav">
       <div class="nav-logo" @click="$emit('navigate', 'home')" style="cursor:pointer">二十四节气</div>
       <div class="nav-links">
@@ -11,9 +11,6 @@
         <a href="#" class="nav-link" @click.prevent="$emit('navigate', 'culture')">传统文化</a>
         <a href="#" class="nav-link" @click.prevent="$emit('navigate', 'poetry')">诗词歌赋</a>
         <a href="#" class="nav-link" @click.prevent="$emit('navigate', 'farming')">农事指南</a>
-      </div>
-      <div class="nav-search">
-        <input type="text" placeholder="搜索节气..." />
       </div>
     </nav>
 
@@ -120,7 +117,7 @@ const isAutoPlaying = ref(false) // 是否自动播放
 let autoPlayInterval = null // 自动播放定时器
 
 const rotationSpeed = ref(3) // 旋转速度倍率（1-10）
-const rotationDirection = ref('clockwise') // 旋转方向：clockwise(顺时针) / counterclockwise(逆时针)
+const rotationDirection = ref('counterclockwise') // 旋转方向：默认逆时针
 
 // ==================== 四季背景色映射 ====================
 const backgrounds = {
@@ -275,9 +272,10 @@ const getLineStyle = (index) => {
   }
 }
 
-// 计算节气文字在圆上的位置（以圆心为基准，文字中点与圆心重合）
+// 计算节气文字在圆上的位置（从3点钟方向开始，顺时针排列）
+// 反向旋转保持文字自身不随圆旋转
 const getTermStyle = (index) => {
-  const angle = index * 15 // 每个节气间隔15度
+  const angle = 90 + index * 15 // 从3点钟方向(90°)开始，每个节气间隔15度
   const radian = (angle * Math.PI) / 180
   const radius = 45 // 文字距离圆心的半径百分比
 
@@ -287,13 +285,14 @@ const getTermStyle = (index) => {
   return {
     left: `${x}%`,
     top: `${y}%`,
-    transform: 'translate(-50%, -50%)'
+    transform: `translate(-50%, -50%) rotate(${-rotationAngle.value}deg)` // 反向旋转抵消圆的旋转，保持文字自身不转
   }
 }
 
-// 计算图片位置样式，并反向旋转以保持图片自身不转
+// 计算图片位置样式（从3点钟方向开始，顺时针排列）
+// 反向旋转保持图片自身不转，当前选中图片向右移动20px
 const getImageStyle = (index) => {
-  const angle = index * 15 // 每个图片间隔15度
+  const angle = 90 + index * 15 // 从3点钟方向(90°)开始，每个图片间隔15度
   const radian = (angle * Math.PI) / 180
   const radius = 30 // 图片距离圆心的半径百分比
 
@@ -326,9 +325,10 @@ const handleTermClick = (index) => {
   currentIndex.value = index
 }
 
-// 监听currentIndex变化，通过GSAP动画旋转轮盘到目标角度
+// 监听currentIndex变化，通过GSAP动画逆时针旋转轮盘
+// 逆时针旋转使当前节气到达3点钟方向（最右边）
 watch(currentIndex, (newIndex) => {
-  const targetAngle = newIndex * 15 // 每个节气对应15度
+  const targetAngle = -newIndex * 15 // 逆时针旋转，每个节气对应-15度
   gsap.to(wheelRef.value, {
     rotation: targetAngle,
     duration: 1.2,
@@ -395,24 +395,30 @@ const resetRotation = () => {
 /* ==================== 顶部导航栏 ==================== */
 .top-nav {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background: rgba(100, 180, 255, 0.95);
+  top: 15px; /* 距离顶部留出间距 */
+  left: 50%; /* 水平居中 */
+  transform: translateX(-50%); /* 居中对齐 */
+  width: 80%; /* 横向占比80% */
+  height: 50px;
+  background: rgba(100, 180, 255, 0.1); /* 透明度10% */
+  backdrop-filter: blur(10px); /* 毛玻璃效果 */
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 25px; /* 圆角矩形 */
   display: flex;
   align-items: center;
   padding: 0 30px;
   z-index: 100;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* 轻微阴影 */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* 半透明边框 */
 }
 
 .nav-logo {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
-  color: #fff;
-  margin-right: 40px;
+  color: rgba(255, 255, 255, 0.9); /* 半透明背景下的文字颜色 */
+  margin-right: 30px;
   white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); /* 文字阴影增强可读性 */
 }
 
 .nav-links {
@@ -422,39 +428,25 @@ const resetRotation = () => {
 }
 
 .nav-link {
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.8); /* 半透明背景下的链接颜色 */
   text-decoration: none;
-  padding: 8px 16px;
+  padding: 6px 14px;
   border-radius: 20px;
   font-size: 14px;
   transition: all 0.3s ease;
   white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* 文字阴影增强可读性 */
 }
 
 .nav-link:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
   color: #fff;
 }
 
 .nav-link.active {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.2);
   color: #fff;
   font-weight: 600;
-}
-
-.nav-search input {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.3);
-  color: #fff;
-  font-size: 14px;
-  outline: none;
-  width: 180px;
-}
-
-.nav-search input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
 }
 
 /* ==================== 轮盘装饰层 ==================== */
