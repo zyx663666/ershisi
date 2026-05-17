@@ -30,6 +30,7 @@
         v-for="(term, index) in terms"
         :key="'img-' + term.name"
         class="wheel-image"
+        :class="{ 'is-current-image': index === currentIndex }"
         :style="getImageStyle(index)"
       >
         <img :src="getImagePath(term.name)" :alt="term.name" />
@@ -108,17 +109,20 @@ import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
 import { terms } from '../data/terms.js'
 import gsap from 'gsap'
 
+// 声明组件事件：向父组件发送页面导航事件
 defineEmits(['navigate'])
 
-const currentIndex = ref(0)
-const wheelRef = ref(null)
-const rotationAngle = ref(0)
-const isAutoPlaying = ref(false)
-let autoPlayInterval = null
+// ==================== 响应式状态变量 ====================
+const currentIndex = ref(0) // 当前选中的节气索引（0-23）
+const wheelRef = ref(null) // 轮盘DOM元素引用
+const rotationAngle = ref(0) // 当前轮盘旋转角度
+const isAutoPlaying = ref(false) // 是否自动播放
+let autoPlayInterval = null // 自动播放定时器
 
-const rotationSpeed = ref(3)
-const rotationDirection = ref('clockwise')
+const rotationSpeed = ref(3) // 旋转速度倍率（1-10）
+const rotationDirection = ref('clockwise') // 旋转方向：clockwise(顺时针) / counterclockwise(逆时针)
 
+// ==================== 四季背景色映射 ====================
 const backgrounds = {
   '春': 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%)',
   '夏': 'linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #388e3c 100%)',
@@ -126,10 +130,12 @@ const backgrounds = {
   '冬': 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%)'
 }
 
+// 根据当前节气的季节计算背景色
 const currentBackground = computed(() => {
   return backgrounds[terms[currentIndex.value].season] || backgrounds['春']
 })
 
+// ==================== 粒子系统颜色配置 ====================
 const particleColors = {
   '春': ['#ffb7c5', '#ff8fa3', '#ffc0cb', '#ff91a4'],
   '夏': ['#ffeb3b', '#fff176', '#fff59d', '#ffee58'],
@@ -137,31 +143,37 @@ const particleColors = {
   '冬': ['#ffffff', '#e1f5fe', '#b3e5fc', '#e0f7fa']
 }
 
+// ==================== 粒子类 ====================
+// 用于在背景中生成飘浮的粒子动画效果，模拟花瓣/落叶/雪花等
 class Particle {
   constructor(x, y, color) {
-    this.x = x
-    this.y = y
-    this.color = color
-    this.size = Math.random() * 4 + 2
-    this.speedX = (Math.random() - 0.5) * 2
-    this.speedY = Math.random() * 3 + 1
-    this.opacity = Math.random() * 0.5 + 0.5
-    this.wobble = Math.random() * Math.PI * 2
-    this.wobbleSpeed = Math.random() * 0.05 + 0.02
+    this.x = x // 粒子x坐标
+    this.y = y // 粒子y坐标
+    this.color = color // 粒子颜色
+    this.size = Math.random() * 4 + 2 // 粒子大小（2-6像素）
+    this.speedX = (Math.random() - 0.5) * 2 // 水平漂移速度
+    this.speedY = Math.random() * 3 + 1 // 垂直下落速度
+    this.opacity = Math.random() * 0.5 + 0.5 // 透明度（0.5-1）
+    this.wobble = Math.random() * Math.PI * 2 // 左右摇摆相位
+    this.wobbleSpeed = Math.random() * 0.05 + 0.02 // 左右摇摆速度
   }
 
+  // 更新粒子位置
   update() {
     this.wobble += this.wobbleSpeed
-    this.x += this.speedX + Math.sin(this.wobble) * 0.5
+    this.x += this.speedX + Math.sin(this.wobble) * 0.5 // 加入正弦摇摆效果
     this.y += this.speedY
+    // 粒子超出屏幕底部时，从顶部重新生成
     if (this.y > window.innerHeight) {
       this.y = -10
       this.x = Math.random() * window.innerWidth
     }
+    // 粒子超出屏幕左右时，从另一侧出现
     if (this.x < 0) this.x = window.innerWidth
     if (this.x > window.innerWidth) this.x = 0
   }
 
+  // 在canvas上绘制粒子
   draw(ctx) {
     ctx.save()
     ctx.globalAlpha = this.opacity
@@ -173,10 +185,12 @@ class Particle {
   }
 }
 
-let canvasEl = null
-let animationFrameId = null
-let particles = []
+// ==================== Canvas粒子动画相关变量 ====================
+let canvasEl = null // canvas元素
+let animationFrameId = null // 动画帧ID
+let particles = [] // 粒子数组
 
+// 初始化粒子系统
 function initParticles() {
   const container = document.getElementById('tsparticles')
   if (!container) return
@@ -197,6 +211,7 @@ function initParticles() {
   animateParticles()
 }
 
+// 粒子动画循环
 function animateParticles() {
   if (!canvasEl) return
   const ctx = canvasEl.getContext('2d')
@@ -208,6 +223,7 @@ function animateParticles() {
   animationFrameId = requestAnimationFrame(animateParticles)
 }
 
+// 根据季节更新粒子的颜色和行为
 function updateParticles() {
   const season = terms[currentIndex.value].season
   const colors = particleColors[season] || particleColors['春']
@@ -218,6 +234,7 @@ function updateParticles() {
   })
 }
 
+// 窗口大小变化时重新设置canvas尺寸
 function handleResize() {
   if (canvasEl) {
     canvasEl.width = window.innerWidth
@@ -225,25 +242,32 @@ function handleResize() {
   }
 }
 
+// ==================== Vue生命周期钩子 ====================
 onMounted(() => {
   initParticles()
   window.addEventListener('resize', handleResize)
 })
 
 onUnmounted(() => {
+  // 清理自动播放定时器
   if (autoPlayInterval) {
     clearInterval(autoPlayInterval)
   }
+  // 取消粒子动画帧
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId)
   }
   window.removeEventListener('resize', handleResize)
 })
 
+// 监听当前节气变化，更新粒子颜色
 watch(currentIndex, () => {
   updateParticles()
 })
 
+// ==================== 轮盘样式计算函数 ====================
+
+// 计算24条径向线的旋转角度（每条线间隔15度）
 const getLineStyle = (index) => {
   const angle = (index * 360) / 24
   return {
@@ -251,10 +275,11 @@ const getLineStyle = (index) => {
   }
 }
 
+// 计算节气文字在圆上的位置（以圆心为基准，文字中点与圆心重合）
 const getTermStyle = (index) => {
-  const angle = index * 15
+  const angle = index * 15 // 每个节气间隔15度
   const radian = (angle * Math.PI) / 180
-  const radius = 45
+  const radius = 45 // 文字距离圆心的半径百分比
 
   const x = 50 + radius * Math.sin(radian)
   const y = 50 - radius * Math.cos(radian)
@@ -266,55 +291,65 @@ const getTermStyle = (index) => {
   }
 }
 
+// 计算图片位置样式，并反向旋转以保持图片自身不转
 const getImageStyle = (index) => {
-  const angle = index * 15
+  const angle = index * 15 // 每个图片间隔15度
   const radian = (angle * Math.PI) / 180
-  const radius = 30
+  const radius = 30 // 图片距离圆心的半径百分比
 
   const x = 50 + radius * Math.sin(radian)
   const y = 50 - radius * Math.cos(radian)
 
+  // 当前选中图片向右额外移动20px
+  const extraTranslate = index === currentIndex.value ? 'translateX(20px)' : ''
+
   return {
     left: `${x}%`,
     top: `${y}%`,
-    transform: 'translate(-50%, -50%)'
+    transform: `translate(-50%, -50%) rotate(${-rotationAngle.value}deg) ${extraTranslate}` // 反向旋转抵消圆的旋转，保持图片自身不转
   }
 }
 
+// 获取节气对应图片的路径
 const getImagePath = (name) => {
   return new URL(`../assets/images/${name}.png`, import.meta.url).href
 }
 
+// ==================== 交互处理函数 ====================
+
+// 点击节气文字切换当前节气
 const handleTermClick = (index) => {
-  if (index === currentIndex.value) return
+  if (index === currentIndex.value) return // 点击相同节气不处理
   if (isAutoPlaying.value) {
-    toggleAutoPlay()
+    toggleAutoPlay() // 手动点击时自动停止自动播放
   }
   currentIndex.value = index
 }
 
+// 监听currentIndex变化，通过GSAP动画旋转轮盘到目标角度
 watch(currentIndex, (newIndex) => {
-  const targetAngle = newIndex * 15
+  const targetAngle = newIndex * 15 // 每个节气对应15度
   gsap.to(wheelRef.value, {
     rotation: targetAngle,
     duration: 1.2,
     ease: "power2.inOut",
     onUpdate: () => {
-      rotationAngle.value = gsap.getProperty(wheelRef.value, "rotation")
+      rotationAngle.value = gsap.getProperty(wheelRef.value, "rotation") // 实时更新旋转角度
     }
   })
 })
 
+// 切换自动播放状态
 const toggleAutoPlay = () => {
   isAutoPlaying.value = !isAutoPlaying.value
   if (isAutoPlaying.value) {
     autoPlayInterval = setInterval(() => {
       if (rotationDirection.value === 'clockwise') {
-        currentIndex.value = (currentIndex.value + 1) % 24
+        currentIndex.value = (currentIndex.value + 1) % 24 // 顺时针：索引+1
       } else {
-        currentIndex.value = (currentIndex.value - 1 + 24) % 24
+        currentIndex.value = (currentIndex.value - 1 + 24) % 24 // 逆时针：索引-1，加24防止负数
       }
-    }, 5000 / rotationSpeed.value)
+    }, 5000 / rotationSpeed.value) // 基础间隔5秒，除以速度倍率
   } else {
     if (autoPlayInterval) {
       clearInterval(autoPlayInterval)
@@ -323,6 +358,7 @@ const toggleAutoPlay = () => {
   }
 }
 
+// 重置轮盘到初始位置（立春）
 const resetRotation = () => {
   currentIndex.value = 0
   gsap.to(wheelRef.value, {
@@ -437,9 +473,9 @@ const resetRotation = () => {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  border: 5px solid #8b7355;
-  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,235,227,0.95) 100%);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), inset 0 3px 10px rgba(255,255,255,0.8);
+  border: 5px solid transparent; /* 圆形边框透明，不显示包裹 */
+  background: transparent; /* 圆形背景透明 */
+  box-shadow: none; /* 移除阴影 */
 }
 
 .wheel-line {
@@ -455,20 +491,27 @@ const resetRotation = () => {
   opacity: 0.7;
 }
 
+/* ==================== 图片层 ==================== */
 .wheel-image {
   position: absolute;
-  width: 8vmin;
-  height: 8vmin;
-  border-radius: 50%;
-  overflow: hidden;
+  width: 16vmin; /* 放大一倍后的尺寸 */
+  height: 16vmin; /* 放大一倍后的尺寸 */
   pointer-events: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: width 0.6s ease, height 0.6s ease; /* 尺寸变化的平滑过渡 */
+  z-index: 15;
+}
+
+/* 当前选中的图片：放大3倍（基于原始8vmin的3倍） */
+.wheel-image.is-current-image {
+  width: 24vmin; /* 原始8vmin × 3 */
+  height: 24vmin; /* 原始8vmin × 3 */
+  z-index: 25; /* 提升层级，确保在其他图片之上 */
 }
 
 .wheel-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain; /* 保持图片比例，不裁剪 */
 }
 
 /* ==================== 节气文字层 ==================== */
