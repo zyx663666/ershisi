@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang=
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二十四节气转盘·全节气+动态主题色版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.6s ease, color 0.6s ease;
+        }
+        body {
+            background: #555;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        /* 主容器 */
+        .container {
+            position: relative;
+            width: 90vw;
+            max-width: 1200px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+        /* 顶部主题色条 */
+        .top-bar {
+            height: 20%;
+            background: #0f0;
+            border-radius: 0 15px 0 0;
+        }
+        /* 中间主体区域 */
+        .middle-area {
+            flex: 1;
+            display: flex;
+            position: relative;
+        }
+        /* 节气圆盘 */
+        .season-wheel-box {
+            position: absolute;
+            left: -25%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 400px;
+            height: 400px;
+        }
+        #seasonWheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            transition: transform 0.3s ease-out, background 0.6s ease;
+            cursor: grab;
+        }
+        /* 24个节气扇形文字 */
+        .sector {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            top: 0;
+            left: 50%;
+            transform-origin: left center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-left: 20px;
+            font-size: 14px;
+            color: #000;
+            font-weight: bold;
+            pointer-events: none;
+        }
+        /* 黑色主区域：展示节气卡片 */
+        .main-content {
+            flex: 1;
+            background: #000;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        /* 节气卡片样式（和你发的图统一竖版书签） */
+        .season-card {
+            height: 100%;
+            max-height: 95vh;
+            border-radius: 20px;
+            border: 3px solid gold;
+            overflow: hidden;
+            display: none;
+        }
+        .season-card img {
+            height: 100%;
+            object-fit: contain;
+        }
+        /* 底部主题色条 */
+        .bottom-bar {
+            height: 20%;
+            background: #ff9922;
+            border-radius: 0 0 15px 0;
+        }
+        /* 旋转控制按钮 */
+        .control-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+沧海月明:
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二十四节气转盘·全节气+动态主题色版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.6s ease, color 0.6s ease;
+        }
+        body {
+            background: #555;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        /* 主容器 */
+        .container {
+            position: relative;
+            width: 90vw;
+            max-width: 1200px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+        /* 顶部主题色条 */
+        .top-bar {
+            height: 20%;
+            background: #0f0;
+            border-radius: 0 15px 0 0;
+        }
+        /* 中间主体区域 */
+        .middle-area {
+            flex: 1;
+            display: flex;
+            position: relative;
+        }
+        /* 节气圆盘 */
+        .season-wheel-box {
+            position: absolute;
+            left: -25%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 400px;
+            height: 400px;
+        }
+        #seasonWheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            transition: transform 0.3s ease-out, background 0.6s ease;
+            cursor: grab;
+        }
+        /* 24个节气扇形文字 */
+        .sector {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            top: 0;
+            left: 50%;
+            transform-origin: left center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-left: 20px;
+            font-size: 14px;
+            color: #000;
+            font-weight: bold;
+            pointer-events: none;
+        }
+        /* 黑色主区域：展示节气卡片 */
+        .main-content {
+            flex: 1;
+            background: #000;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        /* 节气卡片样式（和你发的图统一竖版书签） */
+        .season-card {
+            height: 100%;
+            max-height: 95vh;
+            border-radius: 20px;
+            border: 3px solid gold;
+            overflow: hidden;
+            display: none;
+        }
+        .season-card img {
+            height: 100%;
+            object-fit: contain;
+        }
+        /* 底部主题色条 */
+        .bottom-bar {
+            height: 20%;
+            background: #ff9922;
+            border-radius: 0 0 15px 0;
+        }
+        /* 旋转控制按钮 */
+        .control-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部主题色栏 -->
+        <div class="top-bar"></div>
+        <!-- 中间区域 -->
+        <div class="middle-area">
+            <!-- 24节气转盘 -->
+            <div class="season-wheel-box">
+                <div id="seasonWheel"></div>
+            </div>
+            <!-- 黑色主内容区：节气卡片 -->
+            <div class="main-content">
+                <!-- 全部24节气卡片（已完整匹配+绑定主色调） -->
+                <div class="season-card" data-term="立春" data-theme="#f0f9c8,#b8e680">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224441~tplv-a9rns2rl98-image.image" alt="立春">
+                </div>
+                <div class="season-card" data-term="雨水" data-theme="#c6f0e0,#80d8b0">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224449~tplv-a9rns2rl98-image.image" alt="雨水">
+                </div>
+                <div class="season-card" data-term="惊蛰" data-theme="#d4f5b8,#8ed860">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224442~tplv-a9rns2rl98-image.image" alt="惊蛰">
+                </div>
+                <div class="season-card" data-term="春分" data-theme="#e0f8d0,#a0e080">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34242244434a44089299922d4008224441~tplv-a9rns2rl98-image.image" alt="春分">
+                </div>
+                <div class="season-card" data-term="清明" data-theme="#d0eed8,#88c8a0">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224450~tplv-a9rns2rl98-image.image" alt="清明">
+                </div>
+                <div class="season-card" data-term="谷雨" data-theme="#307040,#70b06
+
+沧海月明:
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二十四节气转盘·全节气+动态主题色版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.6s ease, color 0.6s ease;
+        }
+        body {
+            background: #555;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        /* 主容器 */
+        .container {
+            position: relative;
+            width: 90vw;
+            max-width: 1200px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+        /* 顶部主题色条 */
+        .top-bar {
+            height: 20%;
+            background: #0f0;
+            border-radius: 0 15px 0 0;
+        }
+        /* 中间主体区域 */
+        .middle-area {
+            flex: 1;
+            display: flex;
+            position: relative;
+        }
+        /* 节气圆盘 */
+        .season-wheel-box {
+            position: absolute;
+            left: -25%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 400px;
+            height: 400px;
+        }
+        #seasonWheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            transition: transform 0.3s ease-out, background 0.6s ease;
+            cursor: grab;
+        }
+        /* 24个节气扇形文字 */
+        .sector {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            top: 0;
+            left: 50%;
+            transform-origin: left center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-left: 20px;
+            font-size: 14px;
+            color: #000;
+            font-weight: bold;
+            pointer-events: none;
+        }
+        /* 黑色主区域：展示节气卡片 */
+        .main-content {
+            flex: 1;
+            background: #000;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        /* 节气卡片样式（和你发的图统一竖版书签） */
+        .season-card {
+            height: 100%;
+            max-height: 95vh;
+            border-radius: 20px;
+            border: 3px solid gold;
+            overflow: hidden;
+            display: none;
+        }
+        .season-card img {
+            height: 100%;
+            object-fit: contain;
+        }
+        /* 底部主题色条 */
+        .bottom-bar {
+            height: 20%;
+            background: #ff9922;
+            border-radius: 0 0 15px 0;
+        }
+        /* 旋转控制按钮 */
+        .control-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部主题色栏 -->
+        <div class="top-bar"></div>
+        <!-- 中间区域 -->
+        <div class="middle-area">
+            <!-- 24节气转盘 -->
+            <div class="season-wheel-box">
+                <div id="seasonWheel"></div>
+            </div>
+            <!-- 黑色主内容区：节气卡片 -->
+            <div class="main-content">
+                <!-- 全部24节气卡片（已完整匹配+绑定主色调） -->
+                <div class="season-card" data-term="立春" data-theme="#f0f9c8,#b8e680">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224441~tplv-a9rns2rl98-image.image" alt="立春">
+                </div>
+                <div class="season-card" data-term="雨水" data-theme="#c6f0e0,#80d8b0">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224449~tplv-a9rns2rl98-image.image" alt="雨水">
+                </div>
+                <div class="season-card" data-term="惊蛰" data-theme="#d4f5b8,#8ed860">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224442~tplv-a9rns2rl98-image.image" alt="惊蛰">
+                </div>
+                <div class="season-card" data-term="春分" data-theme="#e0f8d0,#a0e080">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34242244434a44089299922d4008224441~tplv-a9rns2rl98-image.image" alt="春分">
+                </div>
+                <div class="season-card" data-term="清明" data-theme="#d0eed8,#88c8a0">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224450~tplv-a9rns2rl98-image.image" alt="清明">
+                </div>
+                <div class="season-card" data-term="谷雨" data-theme="#307040,#70b060">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224443~tplv-a9rns2rl98-image.image" alt="谷雨">
+                </div>
+                <div class="season-card" data-term="立夏" data-theme="#ff5030,#f0c020">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224444~tplv-a9rns2rl98-image.image" alt="立夏">
+                </div>
+                <div class="season-card" data-term="小满" data-theme="#e04020,#f8d060">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224451~tplv-a9rns2rl98-image.image" alt="小满">
+                </div>
+                <div class="season-card" data-term="芒种" data-theme="#d82828,#f8c040">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224452~tplv-a9rns2rl98-image.image" alt="芒种">
+                </div>
+                <div class="season-card" data-term="夏至" data-theme="#ffd020,#ff3030">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224453~tplv-a9rns2rl98-image.image" alt="夏至">
+                </div>
+                <div class="season-card" data-term="小暑" data-theme="#ff9040,#ffd080">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224446~tplv-a9rns2rl98-image.image" alt="小暑">
+                </div>
+                <div class="season-card" data-term="大暑" data-theme="#d82020,#ff8020">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/54222214138a400899922d4008224441~tplv-a9rns2rl98-image.image" alt="大暑">
+                </div>
+                <div class="season-card" data-term="立秋" data-theme="#f8b070,#e08040">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224445~tplv-a9rns2rl98-image.image" alt="立秋">
+                </div>
+                <div class="season-card" data-term="处暑" data-theme="#203050,#405080">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/14222214138a400899922d4008224441~tplv-a9rns2rl98-image.image" alt="处暑">
+                </div>
+                <div class="season-card" data-term="白露" data-theme="#f8f0e0,#e8d0b0">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/9a001414893a4438900f0041d3309311~tplv-a9rns2rl98-image.image" alt="白露">
+                </div>
+                <div class="season-card" data-term="秋分" data-theme="#f8b060,#e08030">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224454~tplv-a9rns2rl98-image.image" alt="秋分">
+                </div>
+                <div class="season-card" data-term="寒露" data-theme="#d09030,#b07020">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224447~tplv-a9rns2rl98-image.image" alt="寒露">
+                </div>
+                <div class="season-card" data-term="霜降" data-theme="#f08030,#e06020">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224455~tplv-a9rns2rl98-image.image" alt="霜降">
+                </div>
+                <div class="season-card" data-term="立冬" data-theme="#b0d8f0,#80b8e0">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224448~tplv-a9rns2rl98-image.image" alt="立冬">
+                </div>
+                <div class="season-card" data-term="小雪" data-theme="#d0c8f0,#a090e0">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224449~tplv-a9rns2rl98-image.image" alt="小雪">
+                </div>
+                <div class="season-card" data-term="大雪" data-theme="#204080,#6090d0">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/64222214138a400899922d4008224441~tplv-a9rns2rl98-image.image" alt="大雪">
+                </div>
+                <div class="season-card" data-term="冬至" data-theme="#c0e0f8,#90c8f0">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/74222214138a400899922d4008224441~tplv-a9rns2rl98-image.image" alt="冬至">
+                </div>
+                <div class="season-card" data-term="小寒" data-theme="#b0d0f0,#70a0d0">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/34000208023440389922d4008224456~tplv-a9rns2rl98-image.image" alt="小寒">
+                </div>
+                <div class="season-card" data-term="大寒" data-theme="#204090,#4070c0">
+                    < img src="https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns2rl98/44222214138a400899922d4008224441~tplv-a9rns2rl98-image.image" alt="大寒">
+                </div>
+            </div>
+        </div>
+        <!-- 底部主题色栏 -->
+        <div class="bottom-bar"></div>
+    </div>
+    <button class="control-btn" id="rotateBtn">随机旋转节气盘</button>
+
+    <script>
+        // 24节气数组（标准顺序）
+        const solarTerms = [            '立春', '雨水', '惊蛰', '春分', '清明', '谷雨',
+            '立夏', '小满', '芒种', '夏至', '小暑', '大暑',
+            '立秋', '处暑', '白露', '秋分', '寒露', '霜降',
+            '立冬', '小雪', '大雪', '冬至', '小寒', '大寒'
+        ];
+        const wheel = document.getElementById('seasonWheel');
+        const topBar = document.querySelector('.top-bar');
+        const bottomBar = document.querySelector('.bottom-bar');
+        const cards = document.querySelectorAll('.season-card');
+        let currentRotate = 0;
+
+        // 生成24个扇形文字
+        solarTerms.forEach((term, index) => {
+            const sector = document.createElement('div');
+            sector.className = 'sector';
+            sector.textContent = term;
+            sector.style.transform = `rotate(${index * 15}deg)`;
+            wheel.appendChild(sector);
+        });
+
+        // 切换主题色+显示卡片
+        function showCurrentCard() {
+            const modRotate = ((currentRotate % 360) + 360) % 360;
+            const index = Math.floor(modRotate / 15);
+            const currentTerm = solarTerms[index];
+
+            // 隐藏所有卡片
+            cards.forEach(card => card.style.display = 'none');
+            const targetCard = Array.from(cards).find(card => card.dataset.term === currentTerm);
+            if (!targetCard) return;
+            targetCard.style.display = 'block';
+
+            // 提取主色调并更新全局颜色
+            const [color1, color2] = targetCard.dataset.theme.split(',');
+            topBar.style.background = color1;
+            bottomBar.style.background = color2;
+            wheel.style.background = `conic-gradient(from 0deg,
+                ${color1} 0deg 15deg,
+                ${color2} 15deg 30deg,
+                ${color1} 30deg 45deg,
+                ${color2} 45deg 60deg,
+                ${color1} 60deg 75deg,
+                ${color2} 75deg 90deg,
+                ${color1} 90deg 105deg,
+                ${color2} 105deg 120deg,
+                ${color1} 120deg 135deg,
+                ${color2} 135deg 150deg,
+                ${color1} 150deg 165deg,
+                ${color2} 165deg 180deg,
+                ${color1} 180deg 195deg,
+                ${color2} 195deg 210deg,
+                ${color1} 210deg 225deg,
+                ${color2} 225deg 240deg,
+                ${color1} 240deg 255deg,
+                ${color2} 255deg 270deg,
+                ${color1} 270deg 285deg,
+                ${color2} 285deg 300deg,
+                ${color1} 300deg 315deg,
+                ${color2} 315deg 330deg,
+                ${color1} 330deg 345deg,
+                ${color2} 345deg 360deg
+            )`;
+        }
+
+        // 按钮控制旋转
+        const rotateBtn = document.getElementById('rotateBtn');
+        rotateBtn.addEventListener('click', () => {
+            currentRotate += Math.floor(Math.random() * 360 + 180);
+            wheel.style.transform = `rotate(${currentRotate}deg)`;
+            setTimeout(showCurrentCard, 300);
+        });
+
+        // 拖拽旋转功能
+        let isDragging = false;
+        let startAngle = 0;
+        let startRotate = 0;
+
+        wheel.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            const rect = wheel.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            startAngle = Math.atan2(e.clientY - centerY, e.clientX - centerX) * (180 / Math.PI);
+            startRotate = currentRotate;
+            wheel.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const rect = wheel.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const currentAngle = Math.atan2(e.clientY - centerY, e.clientX - centerX) * (180 / Math.PI);
+            const diffAngle = currentAngle - startAngle;
+            currentRotate = startRotate + diffAngle;
+            wheel.style.transform = `rotate(${currentRotate}deg)`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            wheel.style.cursor = 'grab';
+            showCurrentCard();
+        });
+    </script>
+</body>
+</html>
