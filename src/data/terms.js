@@ -9,7 +9,8 @@ export const terms = [
     pinyin: "Lìchūn", // 拼音
     date: "2月3-5日",  // 大致日期范围
     season: "春",      // 所属季节
-    description: "春季开始，万物复苏"  // 节气描述
+    description: "春季开始，万物复苏",  // 节气描述
+    particleType: "swallow"  // 特殊粒子：燕子
   },
   {
     name: "雨水",
@@ -170,6 +171,7 @@ export const terms = [
     pinyin: "Dàhán",
     date: "1月20-21日",
     season: "冬",
-    description: "一年最冷，严寒至极"
+    description: "一年最冷，严寒至极",
+    particleType: "ice"  // 特殊粒子：冰块
   }
 ]
