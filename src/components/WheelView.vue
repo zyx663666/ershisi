@@ -192,16 +192,19 @@ const particleColors = {
   '春': ['#d4a0a0', '#c9918f', '#dbb5b5', '#cfa8a8'],
   '夏': ['#a8b8a0', '#9aab8f', '#b5c4a8', '#a3b498'],
   '秋': ['#c4a878', '#b89868', '#d0b488', '#c4a070'],
-  '冬': ['#c8d0d8', '#b8c4d0', '#d0d8e0', '#bcc8d4']
+  '冬': ['#c8d0d8', '#b8c4d0', '#d0d8e0', '#bcc8d4'],
+  'swallow': ['#5a4a3a', '#6b5a48', '#4a3e32', '#7a6a58'],
+  'ice': ['#a8c8e0', '#c0d8f0', '#90b8d8', '#d0e8f8']
 }
 
 class Particle {
-  constructor(x, y, color, season) {
+  constructor(x, y, color, season, particleType) {
     this.x = x
     this.y = y
     this.color = color
     this.season = season
-    this.size = Math.random() * 4 + 2
+    this.particleType = particleType || season
+    this.size = Math.random() * 8 + 4
     this.speedX = (Math.random() - 0.5) * 2
     this.speedY = Math.random() * 3 + 1
     this.opacity = Math.random() * 0.35 + 0.15
@@ -209,39 +212,190 @@ class Particle {
     this.wobbleSpeed = Math.random() * 0.05 + 0.02
     this.rotation = Math.random() * 360
     this.rotationSpeed = (Math.random() - 0.5) * 2
+    this.wingPhase = Math.random() * Math.PI * 2
+    this.wingSpeed = Math.random() * 0.08 + 0.04
+    this.glitter = Math.random() * Math.PI * 2
+    this.glitterSpeed = Math.random() * 0.06 + 0.03
+
+    if (particleType === 'swallow') {
+      this.size = Math.random() * 6 + 5
+      this.speedX = (Math.random() - 0.3) * 3 + 1
+      this.speedY = (Math.random() - 0.5) * 1.5
+      this.opacity = Math.random() * 0.2 + 0.35
+      this.wobbleSpeed = Math.random() * 0.03 + 0.02
+    } else if (particleType === 'ice') {
+      this.size = Math.random() * 10 + 6
+      this.speedX = (Math.random() - 0.5) * 0.8
+      this.speedY = Math.random() * 1.5 + 0.5
+      this.opacity = Math.random() * 0.15 + 0.25
+      this.rotationSpeed = (Math.random() - 0.5) * 1.5
+    }
   }
 
   update() {
     this.wobble += this.wobbleSpeed
     this.rotation += this.rotationSpeed
-    this.x += this.speedX + Math.sin(this.wobble) * 0.5
-    this.y += this.speedY
-    if (this.y > window.innerHeight) {
-      this.y = -10
-      this.x = Math.random() * window.innerWidth
+    this.wingPhase += this.wingSpeed
+    this.glitter += this.glitterSpeed
+
+    if (this.particleType === 'swallow') {
+      this.x += this.speedX + Math.sin(this.wobble) * 0.8
+      this.y += this.speedY + Math.cos(this.wobble * 0.5) * 0.3
+      if (this.x > window.innerWidth + 50) {
+        this.x = -50
+        this.y = Math.random() * window.innerHeight * 0.6
+      }
+      if (this.y < -50) this.y = window.innerHeight + 50
+      if (this.y > window.innerHeight + 50) this.y = -50
+    } else if (this.particleType === 'ice') {
+      this.x += this.speedX + Math.sin(this.wobble) * 0.3
+      this.y += this.speedY
+      if (this.y > window.innerHeight + 30) {
+        this.y = -30
+        this.x = Math.random() * window.innerWidth
+        this.rotation = Math.random() * 360
+      }
+      if (this.x < -30) this.x = window.innerWidth + 30
+      if (this.x > window.innerWidth + 30) this.x = -30
+    } else {
+      this.x += this.speedX + Math.sin(this.wobble) * 0.5
+      this.y += this.speedY
+      if (this.y > window.innerHeight) {
+        this.y = -10
+        this.x = Math.random() * window.innerWidth
+      }
+      if (this.x < 0) this.x = window.innerWidth
+      if (this.x > window.innerWidth) this.x = 0
     }
-    if (this.x < 0) this.x = window.innerWidth
-    if (this.x > window.innerWidth) this.x = 0
   }
 
   draw(ctx) {
     ctx.save()
     ctx.globalAlpha = this.opacity
     ctx.translate(this.x, this.y)
-    ctx.rotate((this.rotation * Math.PI) / 180)
-    ctx.fillStyle = this.color
 
-    if (this.season === '春') {
+    if (this.particleType === 'swallow') {
+      this.drawSwallow(ctx)
+    } else if (this.particleType === 'ice') {
+      this.drawIce(ctx)
+    } else if (this.season === '春') {
+      ctx.rotate((this.rotation * Math.PI) / 180)
       this.drawPetal(ctx)
     } else if (this.season === '秋') {
+      ctx.rotate((this.rotation * Math.PI) / 180)
       this.drawLeaf(ctx)
     } else if (this.season === '冬') {
+      ctx.rotate((this.rotation * Math.PI) / 180)
       this.drawSnowflake(ctx)
     } else {
+      ctx.rotate((this.rotation * Math.PI) / 180)
       ctx.beginPath()
       ctx.arc(0, 0, this.size, 0, Math.PI * 2)
       ctx.fill()
     }
+
+    ctx.restore()
+  }
+
+  drawSwallow(ctx) {
+    const s = this.size
+    const wingAngle = Math.sin(this.wingPhase) * 0.6
+
+    ctx.fillStyle = this.color
+    ctx.globalAlpha = this.opacity
+
+    // 燕子身体
+    ctx.beginPath()
+    ctx.ellipse(0, 0, s * 0.35, s * 0.15, 0, 0, Math.PI * 2)
+    ctx.fill()
+
+    // 左翼
+    ctx.beginPath()
+    ctx.moveTo(-s * 0.2, 0)
+    ctx.quadraticCurveTo(-s * 1.2, -s * 0.8 + wingAngle * s, -s * 1.8, -s * 0.3 + wingAngle * s * 1.5)
+    ctx.quadraticCurveTo(-s * 1.2, s * 0.1 + wingAngle * s * 0.5, -s * 0.2, s * 0.05)
+    ctx.closePath()
+    ctx.fill()
+
+    // 右翼
+    ctx.beginPath()
+    ctx.moveTo(s * 0.2, 0)
+    ctx.quadraticCurveTo(s * 1.2, -s * 0.8 + wingAngle * s, s * 1.8, -s * 0.3 + wingAngle * s * 1.5)
+    ctx.quadraticCurveTo(s * 1.2, s * 0.1 + wingAngle * s * 0.5, s * 0.2, s * 0.05)
+    ctx.closePath()
+    ctx.fill()
+
+    // 尾羽
+    ctx.beginPath()
+    ctx.moveTo(-s * 0.3, 0)
+    ctx.lineTo(-s * 0.8, s * 0.4)
+    ctx.lineTo(-s * 0.5, s * 0.15)
+    ctx.lineTo(-s * 0.3, s * 0.1)
+    ctx.closePath()
+    ctx.fill()
+
+    // 头部
+    ctx.beginPath()
+    ctx.arc(s * 0.35, -s * 0.05, s * 0.12, 0, Math.PI * 2)
+    ctx.fill()
+  }
+
+  drawIce(ctx) {
+    const s = this.size
+    const glitterAlpha = (Math.sin(this.glitter) + 1) * 0.5
+
+    ctx.save()
+    ctx.rotate((this.rotation * Math.PI) / 180)
+
+    // 冰块主体 - 六边形
+    ctx.fillStyle = this.color
+    ctx.globalAlpha = this.opacity * 0.6
+    ctx.beginPath()
+    for (let i = 0; i < 6; i++) {
+      const angle = (i * Math.PI) / 3
+      const r = s * (i % 2 === 0 ? 1 : 0.7)
+      const px = Math.cos(angle) * r
+      const py = Math.sin(angle) * r
+      if (i === 0) ctx.moveTo(px, py)
+      else ctx.lineTo(px, py)
+    }
+    ctx.closePath()
+    ctx.fill()
+
+    // 冰块高光边缘
+    ctx.strokeStyle = '#e0f0ff'
+    ctx.lineWidth = 1.2
+    ctx.globalAlpha = this.opacity * 0.8
+    ctx.stroke()
+
+    // 内部折射线
+    ctx.strokeStyle = '#c0e0f8'
+    ctx.lineWidth = 0.6
+    ctx.globalAlpha = this.opacity * 0.4
+    ctx.beginPath()
+    ctx.moveTo(-s * 0.3, -s * 0.3)
+    ctx.lineTo(s * 0.2, s * 0.4)
+    ctx.stroke()
+
+    ctx.beginPath()
+    ctx.moveTo(s * 0.1, -s * 0.5)
+    ctx.lineTo(-s * 0.2, s * 0.3)
+    ctx.stroke()
+
+    // 闪烁光点
+    ctx.fillStyle = '#ffffff'
+    ctx.globalAlpha = this.opacity * glitterAlpha * 0.9
+    ctx.beginPath()
+    ctx.arc(s * 0.25, -s * 0.25, s * 0.15, 0, Math.PI * 2)
+    ctx.fill()
+
+    // 外发光
+    ctx.shadowColor = this.color
+    ctx.shadowBlur = s * 0.8
+    ctx.globalAlpha = this.opacity * 0.2
+    ctx.beginPath()
+    ctx.arc(0, 0, s * 0.5, 0, Math.PI * 2)
+    ctx.fill()
 
     ctx.restore()
   }
@@ -288,15 +442,17 @@ function initParticles() {
   canvasEl.height = window.innerHeight
   canvasEl.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;'
   container.appendChild(canvasEl)
-  const season = terms[currentIndex.value].season
-  const colors = particleColors[season] || particleColors['春']
+  const currentTerm = terms[currentIndex.value]
+  const season = currentTerm.season
+  const particleType = currentTerm.particleType || season
+  const colors = particleColors[particleType] || particleColors[season] || particleColors['春']
   particles = []
   const count = particleCount.value
   for (let i = 0; i < count; i++) {
     const x = Math.random() * canvasEl.width
     const y = Math.random() * canvasEl.height
     const color = colors[Math.floor(Math.random() * colors.length)]
-    particles.push(new Particle(x, y, color, season))
+    particles.push(new Particle(x, y, color, season, particleType))
   }
   animateParticles()
 }
@@ -304,13 +460,15 @@ function initParticles() {
 function syncParticleCount() {
   if (!canvasEl) return
   const target = particleCount.value
-  const season = terms[currentIndex.value].season
-  const colors = particleColors[season] || particleColors['春']
+  const currentTerm = terms[currentIndex.value]
+  const season = currentTerm.season
+  const particleType = currentTerm.particleType || season
+  const colors = particleColors[particleType] || particleColors[season] || particleColors['春']
   while (particles.length < target) {
     const x = Math.random() * canvasEl.width
     const y = Math.random() * canvasEl.height
     const color = colors[Math.floor(Math.random() * colors.length)]
-    particles.push(new Particle(x, y, color, season))
+    particles.push(new Particle(x, y, color, season, particleType))
   }
   while (particles.length > target) {
     particles.pop()
@@ -329,13 +487,26 @@ function animateParticles() {
 }
 
 function updateParticles() {
-  const season = terms[currentIndex.value].season
-  const colors = particleColors[season] || particleColors['春']
+  const currentTerm = terms[currentIndex.value]
+  const season = currentTerm.season
+  const particleType = currentTerm.particleType || season
+  const colors = particleColors[particleType] || particleColors[season] || particleColors['春']
   particles.forEach(particle => {
     particle.color = colors[Math.floor(Math.random() * colors.length)]
     particle.season = season
-    particle.speedY = season === '秋' ? 3 : (season === '冬' ? 1.5 : 2)
-    particle.size = season === '秋' ? (Math.random() * 4 + 3) : (Math.random() * 4 + 2)
+    particle.particleType = particleType
+    if (particleType === 'swallow') {
+      particle.speedY = (Math.random() - 0.5) * 1.5
+      particle.size = Math.random() * 6 + 5
+      particle.opacity = Math.random() * 0.2 + 0.35
+    } else if (particleType === 'ice') {
+      particle.speedY = Math.random() * 1.5 + 0.5
+      particle.size = Math.random() * 10 + 6
+      particle.opacity = Math.random() * 0.15 + 0.25
+    } else {
+      particle.speedY = season === '秋' ? 3 : (season === '冬' ? 1.5 : 2)
+      particle.size = season === '秋' ? (Math.random() * 4 + 3) : (Math.random() * 4 + 2)
+    }
   })
 }
 
@@ -489,7 +660,7 @@ const resetRotation = () => {
 /* ==================== 节气背景图（16:9比例，缩小至50%） ==================== */
 .term-bg-wrap {
   position: fixed;
-  bottom: 6vh;
+  top: 280px;
   left: 50%;
   transform: translateX(-50%);
   width: 25vw;
@@ -665,7 +836,7 @@ const resetRotation = () => {
   top: 8px;
   left: 50%;
   transform: translateX(-50%) scale(1.25);
-  width: 80%;
+  width: 64%;
   height: 52px;
   background: rgba(180, 170, 155, 0.1);
   backdrop-filter: blur(24px) saturate(1.3);
@@ -743,7 +914,7 @@ const resetRotation = () => {
   position: absolute;
   width: 120vmin;
   height: 120vmin;
-  left: -45%;
+  left: calc(-45% + 30px);
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
@@ -950,7 +1121,7 @@ const resetRotation = () => {
 /* ==================== 节气描述区 ==================== */
 .term-description {
   position: fixed;
-  top: calc(50% - 120px);
+  top: 60px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 16px;
