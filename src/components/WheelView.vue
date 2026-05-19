@@ -131,6 +131,11 @@
         <span class="speed-value">{{ rotationSpeed }}x</span>
       </div>
       <div class="panel-section">
+        <label>粒子数量</label>
+        <input type="range" min="0" max="150" v-model="particleCount" class="slider" />
+        <span class="speed-value">{{ particleCount }}</span>
+      </div>
+      <div class="panel-section">
         <label>旋转方向</label>
         <div class="btn-group">
           <button :class="{ active: rotationDirection === 'clockwise' }" @click="rotationDirection = 'clockwise'">顺时针</button>
@@ -165,6 +170,7 @@ let autoPlayInterval = null
 const rotationSpeed = ref(3)
 const rotationDirection = ref('counterclockwise')
 const hoveredTerm = ref(-1)
+const particleCount = ref(50)
 
 const mousePos = reactive({ x: 0.5, y: 0.5 })
 
@@ -285,13 +291,30 @@ function initParticles() {
   const season = terms[currentIndex.value].season
   const colors = particleColors[season] || particleColors['春']
   particles = []
-  for (let i = 0; i < 50; i++) {
+  const count = particleCount.value
+  for (let i = 0; i < count; i++) {
     const x = Math.random() * canvasEl.width
     const y = Math.random() * canvasEl.height
     const color = colors[Math.floor(Math.random() * colors.length)]
     particles.push(new Particle(x, y, color, season))
   }
   animateParticles()
+}
+
+function syncParticleCount() {
+  if (!canvasEl) return
+  const target = particleCount.value
+  const season = terms[currentIndex.value].season
+  const colors = particleColors[season] || particleColors['春']
+  while (particles.length < target) {
+    const x = Math.random() * canvasEl.width
+    const y = Math.random() * canvasEl.height
+    const color = colors[Math.floor(Math.random() * colors.length)]
+    particles.push(new Particle(x, y, color, season))
+  }
+  while (particles.length > target) {
+    particles.pop()
+  }
 }
 
 function animateParticles() {
@@ -380,6 +403,10 @@ watch(currentIndex, () => {
   updateParticles()
 })
 
+watch(particleCount, () => {
+  syncParticleCount()
+})
+
 watch(currentIndex, (newIndex) => {
   const targetAngle = -newIndex * 15
   gsap.to(wheelRef.value, {
@@ -424,7 +451,7 @@ const resetRotation = () => {
 </script>
 
 <style scoped>
-/* ==================== 全局容器（季节渐变背景） ==================== */
+/* ==================== 全局容器（动态渐变背景） ==================== */
 .wheel-container {
   position: fixed;
   top: 0;
@@ -434,12 +461,22 @@ const resetRotation = () => {
   overflow: hidden;
   font-family: 'Noto Serif SC', serif;
   transition: background 1.5s ease-in-out;
+  background-size: 300% 300%;
+  animation: bgShift 12s ease-in-out infinite;
 }
 
-.bg-春 { background: linear-gradient(160deg, #e8ded3 0%, #d4c5b5 30%, #c9b8a8 60%, #bfae9e 100%); }
-.bg-夏 { background: linear-gradient(160deg, #b8c5b8 0%, #9aab9e 30%, #8d9e8f 60%, #7e907f 100%); }
-.bg-秋 { background: linear-gradient(160deg, #d4c4a8 0%, #c4b498 30%, #b8a488 60%, #a89478 100%); }
-.bg-冬 { background: linear-gradient(160deg, #c5cdd4 0%, #b3bec8 30%, #a4b0bb 60%, #95a3ae 100%); }
+@keyframes bgShift {
+  0% { background-position: 0% 50%; }
+  25% { background-position: 50% 0%; }
+  50% { background-position: 100% 50%; }
+  75% { background-position: 50% 100%; }
+  100% { background-position: 0% 50%; }
+}
+
+.bg-春 { background: linear-gradient(160deg, #e8ded3 0%, #d4c5b5 25%, #c9b8a8 50%, #bfae9e 75%, #e0d5ca 100%); }
+.bg-夏 { background: linear-gradient(160deg, #b8c5b8 0%, #9aab9e 25%, #8d9e8f 50%, #7e907f 75%, #a8b8a8 100%); }
+.bg-秋 { background: linear-gradient(160deg, #d4c4a8 0%, #c4b498 25%, #b8a488 50%, #a89478 75%, #ccbc9c 100%); }
+.bg-冬 { background: linear-gradient(160deg, #c5cdd4 0%, #b3bec8 25%, #a4b0bb 50%, #95a3ae 75%, #b8c4ce 100%); }
 
 #tsparticles {
   position: absolute;
@@ -449,29 +486,29 @@ const resetRotation = () => {
   pointer-events: none;
 }
 
-/* ==================== 节气背景图（缩小至1/4页面，位于文字下方） ==================== */
+/* ==================== 节气背景图（16:9比例，缩小至50%） ==================== */
 .term-bg-wrap {
   position: fixed;
-  bottom: 8vh;
+  bottom: 6vh;
   left: 50%;
   transform: translateX(-50%);
-  width: 40vw;
-  height: 40vw;
-  max-width: 500px;
-  max-height: 500px;
+  width: 25vw;
+  aspect-ratio: 16 / 9;
+  max-width: 360px;
   z-index: 5;
   pointer-events: none;
-  border-radius: 24px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 8px 48px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 8px 48px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.4s ease;
 }
 
 .term-bg-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 24px;
-  transition: opacity 0.6s ease;
+  border-radius: 16px;
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
 /* ==================== SVG几何装饰 ==================== */
