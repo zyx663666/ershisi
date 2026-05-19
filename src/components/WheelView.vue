@@ -1,5 +1,8 @@
 <template>
-  <div class="wheel-container" :style="{ background: currentBackground }" @mousemove="handleMouseMove" @navigate="$emit('navigate', $event)">
+  <div class="wheel-container" @mousemove="handleMouseMove" @navigate="$emit('navigate', $event)">
+    <div class="bg-layer" :class="useLayer1 ? 'bg-layer-active' : 'bg-layer-inactive'" :style="{ backgroundImage: layer1Image }"></div>
+    <div class="bg-layer" :class="!useLayer1 ? 'bg-layer-active' : 'bg-layer-inactive'" :style="{ backgroundImage: layer2Image }"></div>
+    <div class="bg-tint" :class="'tint-' + terms[currentIndex].season"></div>
     <div id="tsparticles"></div>
 
     <!-- SVG几何装饰层（山水/祥云/竹叶/荷花的极简线稿） -->
@@ -141,7 +144,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, onMounted, onUnmounted, reactive } from 'vue'
+import { ref, watch, computed, onMounted, onUnmounted, reactive, nextTick } from 'vue'
 import { terms } from '../data/terms.js'
 import gsap from 'gsap'
 
@@ -169,15 +172,25 @@ const cursorGlowStyle = computed(() => ({
   top: `${mousePos.y * 100}%`
 }))
 
-const backgrounds = {
-  '春': 'linear-gradient(135deg, #e8ded3 0%, #d4c5b5 30%, #c9b8a8 60%, #bfae9e 100%)',
-  '夏': 'linear-gradient(135deg, #b8c5b8 0%, #9aab9e 30%, #8d9e8f 60%, #7e907f 100%)',
-  '秋': 'linear-gradient(135deg, #d4c4a8 0%, #c4b498 30%, #b8a488 60%, #a89478 100%)',
-  '冬': 'linear-gradient(135deg, #c5cdd4 0%, #b3bec8 30%, #a4b0bb 60%, #95a3ae 100%)'
+const getBgPath = (name) => {
+  return new URL(`../assets/images/背景${name}.png`, import.meta.url).href
 }
 
-const currentBackground = computed(() => {
-  return backgrounds[terms[currentIndex.value].season] || backgrounds['春']
+const useLayer1 = ref(true)
+const layer1Image = ref(`url(${getBgPath(terms[0].name)})`)
+const layer2Image = ref('')
+
+watch(currentIndex, (newVal) => {
+  const url = `url(${getBgPath(terms[newVal].name)})`
+  if (useLayer1.value) {
+    layer2Image.value = url
+  } else {
+    layer1Image.value = url
+  }
+  nextTick(() => {
+    useLayer1.value = !useLayer1.value
+  })
+  updateParticles()
 })
 
 const particleColors = {
@@ -332,10 +345,6 @@ onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
 })
 
-watch(currentIndex, () => {
-  updateParticles()
-})
-
 const getLineStyle = (index) => {
   const angle = (index * 360) / 24
   return { transform: `rotate(${angle}deg)` }
@@ -430,9 +439,41 @@ const resetRotation = () => {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  transition: background 1.5s ease-in-out;
   font-family: 'Noto Serif SC', serif;
 }
+
+.bg-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: #d4cfc6;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+}
+
+.bg-layer-active {
+  opacity: 1;
+}
+
+.bg-layer-inactive {
+  opacity: 0;
+}
+
+.bg-tint {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  transition: background 1.5s ease-in-out;
+}
+
+.tint-春 { background: linear-gradient(135deg, rgba(232,222,211,0.25) 0%, rgba(201,184,168,0.35) 100%); }
+.tint-夏 { background: linear-gradient(135deg, rgba(184,197,184,0.25) 0%, rgba(141,158,143,0.35) 100%); }
+.tint-秋 { background: linear-gradient(135deg, rgba(212,196,168,0.25) 0%, rgba(184,164,136,0.35) 100%); }
+.tint-冬 { background: linear-gradient(135deg, rgba(197,205,212,0.25) 0%, rgba(164,176,187,0.35) 100%); }
 
 #tsparticles {
   position: absolute;
