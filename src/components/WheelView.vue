@@ -1,8 +1,5 @@
 <template>
-  <div class="wheel-container" @mousemove="handleMouseMove" @navigate="$emit('navigate', $event)">
-    <div class="bg-layer" :class="useLayer1 ? 'bg-layer-active' : 'bg-layer-inactive'" :style="{ backgroundImage: layer1Image }"></div>
-    <div class="bg-layer" :class="!useLayer1 ? 'bg-layer-active' : 'bg-layer-inactive'" :style="{ backgroundImage: layer2Image }"></div>
-    <div class="bg-tint" :class="'tint-' + terms[currentIndex].season"></div>
+  <div class="wheel-container" :class="'bg-' + terms[currentIndex].season" @mousemove="handleMouseMove" @navigate="$emit('navigate', $event)">
     <div id="tsparticles"></div>
 
     <!-- SVG几何装饰层（山水/祥云/竹叶/荷花的极简线稿） -->
@@ -106,6 +103,15 @@
       {{ terms[currentIndex].description }}
     </div>
 
+    <!-- 节气背景图（缩小至页面1/4，放置在节气文字下方） -->
+    <div class="term-bg-wrap">
+      <img
+        class="term-bg-image"
+        :src="getBgPath(terms[currentIndex].name)"
+        :alt="terms[currentIndex].name"
+      />
+    </div>
+
     <!-- 右下角控制面板 -->
     <div class="control-panel">
       <div class="panel-title">
@@ -144,7 +150,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, onMounted, onUnmounted, reactive, nextTick } from 'vue'
+import { ref, watch, computed, onMounted, onUnmounted, reactive } from 'vue'
 import { terms } from '../data/terms.js'
 import gsap from 'gsap'
 
@@ -175,23 +181,6 @@ const cursorGlowStyle = computed(() => ({
 const getBgPath = (name) => {
   return new URL(`../assets/images/背景${name}.png`, import.meta.url).href
 }
-
-const useLayer1 = ref(true)
-const layer1Image = ref(`url(${getBgPath(terms[0].name)})`)
-const layer2Image = ref('')
-
-watch(currentIndex, (newVal) => {
-  const url = `url(${getBgPath(terms[newVal].name)})`
-  if (useLayer1.value) {
-    layer2Image.value = url
-  } else {
-    layer1Image.value = url
-  }
-  nextTick(() => {
-    useLayer1.value = !useLayer1.value
-  })
-  updateParticles()
-})
 
 const particleColors = {
   '春': ['#d4a0a0', '#c9918f', '#dbb5b5', '#cfa8a8'],
@@ -387,6 +376,10 @@ const handleTermClick = (index) => {
   currentIndex.value = index
 }
 
+watch(currentIndex, () => {
+  updateParticles()
+})
+
 watch(currentIndex, (newIndex) => {
   const targetAngle = -newIndex * 15
   gsap.to(wheelRef.value, {
@@ -431,7 +424,7 @@ const resetRotation = () => {
 </script>
 
 <style scoped>
-/* ==================== 全局容器 ==================== */
+/* ==================== 全局容器（季节渐变背景） ==================== */
 .wheel-container {
   position: fixed;
   top: 0;
@@ -440,40 +433,13 @@ const resetRotation = () => {
   height: 100vh;
   overflow: hidden;
   font-family: 'Noto Serif SC', serif;
-}
-
-.bg-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-color: #d4cfc6;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: opacity;
-}
-
-.bg-layer-active {
-  opacity: 1;
-}
-
-.bg-layer-inactive {
-  opacity: 0;
-}
-
-.bg-tint {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
   transition: background 1.5s ease-in-out;
 }
 
-.tint-春 { background: linear-gradient(135deg, rgba(232,222,211,0.25) 0%, rgba(201,184,168,0.35) 100%); }
-.tint-夏 { background: linear-gradient(135deg, rgba(184,197,184,0.25) 0%, rgba(141,158,143,0.35) 100%); }
-.tint-秋 { background: linear-gradient(135deg, rgba(212,196,168,0.25) 0%, rgba(184,164,136,0.35) 100%); }
-.tint-冬 { background: linear-gradient(135deg, rgba(197,205,212,0.25) 0%, rgba(164,176,187,0.35) 100%); }
+.bg-春 { background: linear-gradient(160deg, #e8ded3 0%, #d4c5b5 30%, #c9b8a8 60%, #bfae9e 100%); }
+.bg-夏 { background: linear-gradient(160deg, #b8c5b8 0%, #9aab9e 30%, #8d9e8f 60%, #7e907f 100%); }
+.bg-秋 { background: linear-gradient(160deg, #d4c4a8 0%, #c4b498 30%, #b8a488 60%, #a89478 100%); }
+.bg-冬 { background: linear-gradient(160deg, #c5cdd4 0%, #b3bec8 30%, #a4b0bb 60%, #95a3ae 100%); }
 
 #tsparticles {
   position: absolute;
@@ -481,6 +447,31 @@ const resetRotation = () => {
   height: 100%;
   z-index: 1;
   pointer-events: none;
+}
+
+/* ==================== 节气背景图（缩小至1/4页面，位于文字下方） ==================== */
+.term-bg-wrap {
+  position: fixed;
+  bottom: 8vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40vw;
+  height: 40vw;
+  max-width: 500px;
+  max-height: 500px;
+  z-index: 5;
+  pointer-events: none;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 48px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.term-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 24px;
+  transition: opacity 0.6s ease;
 }
 
 /* ==================== SVG几何装饰 ==================== */
@@ -634,9 +625,9 @@ const resetRotation = () => {
 /* ==================== 顶部导航栏 ==================== */
 .top-nav {
   position: fixed;
-  top: 15px;
+  top: 8px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) scale(1.25);
   width: 80%;
   height: 52px;
   background: rgba(180, 170, 155, 0.1);
@@ -649,6 +640,7 @@ const resetRotation = () => {
   z-index: 100;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.12);
+  transform-origin: center center;
 }
 
 .nav-logo {
@@ -860,9 +852,9 @@ const resetRotation = () => {
 /* ==================== 中心显示区 ==================== */
 .center-display {
   position: fixed;
-  top: 50%;
+  top: calc(50% - 200px);
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   text-align: center;
   z-index: 30;
   pointer-events: none;
@@ -872,12 +864,12 @@ const resetRotation = () => {
 @keyframes centerFadeIn {
   from {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.9);
+    transform: translateX(-50%) scale(0.9);
     filter: blur(6px);
   }
   to {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translateX(-50%) scale(1);
     filter: blur(0);
   }
 }
@@ -921,7 +913,7 @@ const resetRotation = () => {
 /* ==================== 节气描述区 ==================== */
 .term-description {
   position: fixed;
-  top: calc(50% + 60vmin + 30px);
+  top: calc(50% - 120px);
   left: 50%;
   transform: translateX(-50%);
   font-size: 16px;
