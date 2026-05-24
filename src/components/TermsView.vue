@@ -51,19 +51,21 @@
           <span class="season-name">{{ season.label }}</span>
           <div class="season-line"></div>
         </div>
-        <div class="terms-grid">
+        <div class="terms-grid" :class="'grid-' + season.name">
           <div
             v-for="(term, idx) in season.terms"
             :key="term.name"
             class="term-card"
-            :style="{ animationDelay: idx * 0.06 + 's' }"
+            :style="{ animationDelay: idx * 0.08 + 's' }"
           >
-            <div class="card-top" :style="{ background: season.gradient }">
+            <div class="card-top" :style="{ background: term.gradient }">
+              <svg class="card-deco-svg" viewBox="0 0 24 24" fill="none" v-html="term.decoSvg"></svg>
               <span class="card-name">{{ term.name }}</span>
             </div>
             <div class="card-body">
               <div class="card-pinyin">{{ term.pinyin }}</div>
               <div class="card-date">{{ term.date }}</div>
+              <div class="card-divider" :style="{ background: term.color }"></div>
               <div class="card-desc">{{ term.description }}</div>
             </div>
           </div>
@@ -90,27 +92,19 @@ const cursorGlowStyle = computed(() => ({
 
 const seasonConfig = {
   '春': {
-    icon: '◇',
     label: '春季',
-    gradient: 'linear-gradient(135deg, #c9b8a8, #b8a898)',
     svgPath: '<path d="M10 4 Q14 8 10 12 Q6 8 10 4Z" stroke="currentColor" stroke-width="1" fill="none"/><path d="M10 12 Q14 16 10 18 Q6 16 10 12Z" stroke="currentColor" stroke-width="0.8" fill="none"/>'
   },
   '夏': {
-    icon: '△',
     label: '夏季',
-    gradient: 'linear-gradient(135deg, #9aab9e, #8d9e8f)',
     svgPath: '<path d="M10 3L18 17H2L10 3Z" stroke="currentColor" stroke-width="1" fill="none"/>'
   },
   '秋': {
-    icon: '□',
     label: '秋季',
-    gradient: 'linear-gradient(135deg, #c4b498, #b8a488)',
     svgPath: '<rect x="4" y="4" width="12" height="12" rx="1" stroke="currentColor" stroke-width="1" fill="none"/>'
   },
   '冬': {
-    icon: '◯',
     label: '冬季',
-    gradient: 'linear-gradient(135deg, #b3bec8, #a4b0bb)',
     svgPath: '<circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1" fill="none"/><line x1="10" y1="3" x2="10" y2="7" stroke="currentColor" stroke-width="0.6"/><line x1="10" y1="13" x2="10" y2="17" stroke="currentColor" stroke-width="0.6"/>'
   }
 }
@@ -135,7 +129,7 @@ const seasonGroups = computed(() => {
   min-height: 100vh;
   background: linear-gradient(160deg, #e8e0d8 0%, #d8cfc5 30%, #c9bfb3 60%, #bfb3a5 100%);
   overflow-y: auto;
-  padding: 0 0 60px;
+  padding: 0 0 80px;
   box-sizing: border-box;
   font-family: 'Noto Serif SC', serif;
   position: relative;
@@ -178,10 +172,10 @@ const seasonGroups = computed(() => {
 
 .cursor-glow {
   position: fixed;
-  width: 350px;
-  height: 350px;
+  width: 400px;
+  height: 400px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
   transform: translate(-50%, -50%);
   pointer-events: none;
   z-index: 1;
@@ -262,16 +256,16 @@ const seasonGroups = computed(() => {
 }
 
 .page-content {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 90px 40px 40px;
+  padding: 100px 60px 60px;
   position: relative;
   z-index: 1;
 }
 
 .page-header {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 60px;
   animation: headerIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -294,15 +288,15 @@ const seasonGroups = computed(() => {
 }
 
 .page-header h1 {
-  font-size: 38px;
+  font-size: 42px;
   color: rgba(80, 70, 55, 0.88);
   margin: 0 0 12px;
-  letter-spacing: 8px;
+  letter-spacing: 10px;
   font-weight: 700;
 }
 
 .title-line {
-  width: 50px;
+  width: 60px;
   height: 2px;
   background: rgba(139, 115, 85, 0.1);
   margin: 0 auto 14px;
@@ -322,14 +316,14 @@ const seasonGroups = computed(() => {
 @keyframes lineGrow { to { transform: scaleX(1); } }
 
 .header-desc {
-  font-size: 14px;
+  font-size: 15px;
   color: rgba(100, 90, 75, 0.45);
   letter-spacing: 2px;
   margin: 0;
 }
 
 .season-section {
-  margin-bottom: 48px;
+  margin-bottom: 56px;
   animation: sectionIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
@@ -342,20 +336,20 @@ const seasonGroups = computed(() => {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .season-icon-svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   color: rgba(139, 115, 85, 0.45);
 }
 
 .season-name {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   color: rgba(80, 70, 55, 0.72);
-  letter-spacing: 4px;
+  letter-spacing: 5px;
 }
 
 .season-line {
@@ -366,77 +360,149 @@ const seasonGroups = computed(() => {
 
 .terms-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
 }
 
+.grid-春 { grid-template-columns: repeat(3, 1fr); }
+.grid-夏 { grid-template-columns: repeat(3, 1fr); }
+.grid-秋 { grid-template-columns: repeat(3, 1fr); }
+.grid-冬 { grid-template-columns: repeat(3, 1fr); }
+
 .term-card {
-  background: rgba(255, 255, 255, 0.32);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.03);
+  transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   animation: cardIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
   cursor: default;
+  position: relative;
 }
 
 @keyframes cardIn {
-  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .term-card:hover {
-  transform: translateY(-5px) scale(1.01);
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.05);
-  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.07);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.term-card:hover .card-deco-svg {
+  opacity: 0.4;
+  transform: scale(1.15) rotate(5deg);
+}
+
+.term-card:hover .card-name {
+  letter-spacing: 8px;
 }
 
 .card-top {
-  padding: 18px 16px 14px;
+  padding: 28px 20px 22px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-deco-svg {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 48px;
+  height: 48px;
+  color: rgba(255, 255, 255, 0.2);
+  opacity: 0.25;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card-name {
-  font-size: 26px;
+  font-size: 30px;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.92);
   letter-spacing: 6px;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: letter-spacing 0.4s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .card-body {
-  padding: 14px 16px 18px;
+  padding: 18px 20px 24px;
   text-align: center;
 }
 
 .card-pinyin {
-  font-size: 13px;
+  font-size: 14px;
   color: rgba(139, 115, 85, 0.5);
-  letter-spacing: 2px;
-  margin-bottom: 4px;
+  letter-spacing: 3px;
+  margin-bottom: 6px;
+  font-weight: 300;
 }
 
 .card-date {
   font-size: 12px;
   color: rgba(139, 115, 85, 0.35);
   letter-spacing: 1px;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
+}
+
+.card-divider {
+  width: 32px;
+  height: 2px;
+  margin: 0 auto 14px;
+  border-radius: 1px;
+  opacity: 0.4;
+  transition: width 0.4s ease, opacity 0.4s ease;
+}
+
+.term-card:hover .card-divider {
+  width: 56px;
+  opacity: 0.7;
 }
 
 .card-desc {
-  font-size: 13px;
-  color: rgba(80, 70, 55, 0.55);
-  line-height: 1.6;
+  font-size: 14px;
+  color: rgba(80, 70, 55, 0.6);
+  line-height: 1.8;
+  letter-spacing: 1px;
+}
+
+@media (min-width: 1400px) {
+  .page-content {
+    max-width: 1400px;
+    padding: 110px 80px 80px;
+  }
+  .grid-春 { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .grid-夏 { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .grid-秋 { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .grid-冬 { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .card-name { font-size: 34px; }
+  .card-desc { font-size: 15px; }
+  .card-deco-svg { width: 56px; height: 56px; }
+}
+
+@media (max-width: 1200px) {
+  .grid-春 { grid-template-columns: repeat(2, 1fr); }
+  .grid-夏 { grid-template-columns: repeat(2, 1fr); }
+  .grid-秋 { grid-template-columns: repeat(2, 1fr); }
+  .grid-冬 { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
   .terms-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 14px;
   }
+  .grid-春,
+  .grid-夏,
+  .grid-秋,
+  .grid-冬 { grid-template-columns: repeat(2, 1fr); }
   .page-content { padding: 80px 20px 40px; }
   .page-header h1 { font-size: 28px; }
 }
