@@ -1,170 +1,331 @@
 /**
  * 二十四节气数据
- * 包含24个节气的名称、拼音、日期、季节和描述
+ * 包含24个节气的名称、拼音、日期、季节、描述、详情、三候、习俗、诗词、专属配色和装饰SVG
  */
 
 export const terms = [
   {
-    name: "立春",      // 中文名称
-    pinyin: "Lìchūn", // 拼音
-    date: "2月3-5日",  // 大致日期范围
-    season: "春",      // 所属季节
-    description: "春季开始，万物复苏",  // 节气描述
-    particleType: "swallow"  // 特殊粒子：燕子
+    name: "立春",
+    pinyin: "Lìchūn",
+    date: "2月3-5日",
+    season: "春",
+    description: "春季开始，万物复苏",
+    detail: "立春为二十四节气之首，标志着万物闭藏的冬季已过，开始进入风和日暖、万物生长的春季。此时东风解冻，蛰虫始振，鱼陟负冰，大自然正悄然苏醒。",
+    pentads: ["东风解冻", "蛰虫始振", "鱼陟负冰"],
+    customs: "咬春、打春牛、贴春胜、迎春",
+    poetry: "春已归来，看美人头上，袅袅春幡。——辛弃疾《汉宫春》",
+    particleType: "swallow",
+    color: "#7a9e7e",
+    gradient: "linear-gradient(135deg, #8aab8e 0%, #6b9470 50%, #5a8460 100%)",
+    decoSvg: '<path d="M12 18 Q8 14 10 10 Q12 6 14 10 Q16 14 12 18Z" stroke="currentColor" stroke-width="1" fill="none"/><line x1="12" y1="18" x2="12" y2="24" stroke="currentColor" stroke-width="0.8"/>'
   },
   {
     name: "雨水",
     pinyin: "Yǔshuǐ",
     date: "2月18-20日",
     season: "春",
-    description: "降雨开始，雨量渐增"
+    description: "降雨开始，雨量渐增",
+    detail: "雨水节气标示着降雨开始，雨量渐增。此时气温回升、冰雪融化、降水增多，适宜的降水对农作物生长至关重要，是农耕文化对于节令的反映。",
+    pentads: ["獭祭鱼", "鸿雁来", "草木萌动"],
+    customs: "回娘屋、拉保保、接寿",
+    poetry: "好雨知时节，当春乃发生。——杜甫《春夜喜雨》",
+    color: "#6a8fa8",
+    gradient: "linear-gradient(135deg, #7aa3b8 0%, #5e8da5 50%, #4a7a92 100%)",
+    decoSvg: '<path d="M12 6 Q14 12 12 18 Q10 12 12 6Z" stroke="currentColor" stroke-width="1" fill="none"/><circle cx="8" cy="14" r="1" stroke="currentColor" stroke-width="0.6" fill="none"/><circle cx="16" cy="10" r="1.2" stroke="currentColor" stroke-width="0.6" fill="none"/>'
   },
   {
     name: "惊蛰",
     pinyin: "Jīngzhé",
     date: "3月5-7日",
     season: "春",
-    description: "春雷乍动，惊醒蛰虫"
+    description: "春雷乍动，惊醒蛰虫",
+    detail: "惊蛰反映自然物候现象，春雷始鸣，惊醒蛰伏于地下冬眠的昆虫。此时桃花盛开，黄鹂鸣叫，鹰化为鸠，万物生机盎然。",
+    pentads: ["桃始华", "仓庚鸣", "鹰化为鸠"],
+    customs: "祭白虎、吃梨、蒙鼓皮",
+    poetry: "微雨众卉新，一雷惊蛰始。——韦应物《观田家》",
+    color: "#b07a98",
+    gradient: "linear-gradient(135deg, #c08aa5 0%, #a87090 50%, #96607e 100%)",
+    decoSvg: '<path d="M8 12 L12 6 L16 12" stroke="currentColor" stroke-width="1" fill="none"/><line x1="12" y1="6" x2="12" y2="20" stroke="currentColor" stroke-width="0.8"/><path d="M6 16 Q9 14 12 16 Q15 18 18 16" stroke="currentColor" stroke-width="0.8" fill="none"/>'
   },
   {
     name: "春分",
     pinyin: "Chūnfēn",
     date: "3月20-22日",
     season: "春",
-    description: "昼夜平分，春意盎然"
+    description: "昼夜平分，春意盎然",
+    detail: "春分时节太阳直射赤道，昼夜等长。此后阳光直射位置逐渐北移，北半球白昼渐长。玄鸟至，雷乃发声，始电，春意正浓。",
+    pentads: ["玄鸟至", "雷乃发声", "始电"],
+    customs: "竖蛋、吃春菜、送春牛",
+    poetry: "雪入春分省见稀，半开桃李不胜威。——苏轼《癸丑春分后雪》",
+    color: "#8aaa7a",
+    gradient: "linear-gradient(135deg, #9aba8a 0%, #7ea06c 50%, #6e905c 100%)",
+    decoSvg: '<circle cx="12" cy="12" r="6" stroke="currentColor" stroke-width="1" fill="none"/><line x1="6" y1="12" x2="18" y2="12" stroke="currentColor" stroke-width="0.8"/><path d="M9 9 Q12 6 15 9" stroke="currentColor" stroke-width="0.8" fill="none"/><path d="M9 15 Q12 18 15 15" stroke="currentColor" stroke-width="0.8" fill="none"/>'
   },
   {
     name: "清明",
     pinyin: "Qīngmíng",
     date: "4月4-6日",
     season: "春",
-    description: "天气晴朗，草木繁茂"
+    description: "天气晴朗，草木繁茂",
+    detail: "清明时节气温变暖，降雨增多，草木萌动。正是春耕春种的大好时节，也是民间寄放情感、缅怀先人的传统日子。桐始华，田鼠化为鴽，虹始见。",
+    pentads: ["桐始华", "田鼠化为鴽", "虹始见"],
+    customs: "扫墓祭祖、踏青、插柳、放风筝",
+    poetry: "清明时节雨纷纷，路上行人欲断魂。——杜牧《清明》",
+    color: "#6aaa8a",
+    gradient: "linear-gradient(135deg, #7aba9a 0%, #5e9a7e 50%, #4e8a6e 100%)",
+    decoSvg: '<path d="M12 4 Q16 8 12 12 Q8 8 12 4Z" stroke="currentColor" stroke-width="1" fill="none"/><path d="M12 12 Q16 16 12 20 Q8 16 12 12Z" stroke="currentColor" stroke-width="0.8" fill="none"/>'
   },
   {
     name: "谷雨",
     pinyin: "Gǔyǔ",
     date: "4月19-21日",
     season: "春",
-    description: "雨生百谷，作物生长"
+    description: "雨生百谷，作物生长",
+    detail: '谷雨取自"雨生百谷"之意，降水明显增加，田中秧苗初插、作物新种，最需雨水滋润。萍始生，鸣鸠拂其羽，戴胜降于桑。',
+    pentads: ["萍始生", "鸣鸠拂其羽", "戴胜降于桑"],
+    customs: "赏牡丹、走谷雨、喝谷雨茶",
+    poetry: "谷雨如丝复似尘，煮瓶浮蜡正尝新。——范成大《晚春田园杂兴》",
+    color: "#7a9a6a",
+    gradient: "linear-gradient(135deg, #8aaa7a 0%, #6e8a5e 50%, #5e7a4e 100%)",
+    decoSvg: '<path d="M12 6 Q14 10 12 14 Q10 10 12 6Z" stroke="currentColor" stroke-width="1" fill="none"/><path d="M8 14 L12 20 L16 14" stroke="currentColor" stroke-width="0.8" fill="none"/>'
   },
   {
     name: "立夏",
     pinyin: "Lìxià",
     date: "5月5-7日",
     season: "夏",
-    description: "夏季开始，万物繁茂"
+    description: "夏季开始，万物繁茂",
+    detail: "立夏表示告别春天，夏天开始。万物进入旺盛生长期，温度明显升高，炎暑将临。蝼蝈鸣，蚯蚓出，王瓜生。",
+    pentads: ["蝼蝈鸣", "蚯蚓出", "王瓜生"],
+    customs: "秤人、尝新、斗蛋",
+    poetry: "绿树阴浓夏日长，楼台倒影入池塘。——高骈《山亭夏日》",
+    color: "#5a8a5a",
+    gradient: "linear-gradient(135deg, #6a9a6a 0%, #4e7e4e 50%, #3e6e3e 100%)",
+    decoSvg: '<path d="M10 4L12 8L14 4" stroke="currentColor" stroke-width="1" fill="none"/><path d="M6 12 Q12 8 18 12" stroke="currentColor" stroke-width="0.8" fill="none"/><path d="M8 16 Q12 12 16 16" stroke="currentColor" stroke-width="0.8" fill="none"/>'
   },
   {
     name: "小满",
     pinyin: "Xiǎomǎn",
     date: "5月20-22日",
     season: "夏",
-    description: "麦类饱满，即将成熟"
+    description: "麦类饱满，即将成熟",
+    detail: "小满节气意味着进入大幅降水的雨季，雨水开始增多。夏熟作物籽粒开始饱满但尚未成熟，正是农事繁忙之时。苦菜秀，靡草死，麦秋至。",
+    pentads: ["苦菜秀", "靡草死", "麦秋至"],
+    customs: "祭车神、食苦菜、抢水",
+    poetry: "夜莺啼绿柳，皓月醒长空。——欧阳修《小满》",
+    color: "#8a9a5a",
+    gradient: "linear-gradient(135deg, #9aaa6a 0%, #7e8e4e 50%, #6e7e3e 100%)",
+    decoSvg: '<ellipse cx="12" cy="10" rx="4" ry="6" stroke="currentColor" stroke-width="1" fill="none"/><line x1="12" y1="16" x2="12" y2="22" stroke="currentColor" stroke-width="0.8"/>'
   },
   {
     name: "芒种",
     pinyin: "Mángzhòng",
     date: "6月5-7日",
     season: "夏",
-    description: "麦类成熟，抢收抢种"
+    description: "麦类成熟，抢收抢种",
+    detail: '芒种字面意思是"有芒的麦子快收，有芒的稻子可种"。此时长江中下游地区将进入多雨的黄梅时节。螳螂生，鵙始鸣，反舌无声。',
+    pentads: ["螳螂生", "鵙始鸣", "反舌无声"],
+    customs: "送花神、安苗、煮梅",
+    poetry: "时雨及芒种，四野皆插秧。——陆游《时雨》",
+    color: "#9a8a4a",
+    gradient: "linear-gradient(135deg, #aa9a5a 0%, #8e7e3e 50%, #7e6e2e 100%)",
+    decoSvg: '<path d="M8 8 L12 4 L16 8" stroke="currentColor" stroke-width="1" fill="none"/><line x1="12" y1="4" x2="12" y2="20" stroke="currentColor" stroke-width="0.8"/><path d="M8 12 Q12 10 16 12" stroke="currentColor" stroke-width="0.6" fill="none"/>'
   },
   {
     name: "夏至",
     pinyin: "Xiàzhì",
     date: "6月21-22日",
     season: "夏",
-    description: "白昼最长，阳气极盛"
+    description: "白昼最长，阳气极盛",
+    detail: "夏至是北半球一年中白昼最长的一天，太阳直射北回归线。此后白昼逐渐缩短，阳气盛极而衰，阴气始生。鹿角解，蜩始鸣，半夏生。",
+    pentads: ["鹿角解", "蜩始鸣", "半夏生"],
+    customs: "祭地、吃面条、消夏避伏",
+    poetry: "昼晷已云极，宵漏自此长。——韦应物《夏至避暑北池》",
+    color: "#6a8a4a",
+    gradient: "linear-gradient(135deg, #7a9a5a 0%, #5e7e3e 50%, #4e6e2e 100%)",
+    decoSvg: '<circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1" fill="none"/><line x1="12" y1="4" x2="12" y2="7" stroke="currentColor" stroke-width="0.8"/><line x1="12" y1="17" x2="12" y2="20" stroke="currentColor" stroke-width="0.8"/><line x1="4" y1="12" x2="7" y2="12" stroke="currentColor" stroke-width="0.8"/><line x1="17" y1="12" x2="20" y2="12" stroke="currentColor" stroke-width="0.8"/>'
   },
   {
     name: "小暑",
     pinyin: "Xiǎoshǔ",
     date: "7月6-8日",
     season: "夏",
-    description: "天气炎热，暑气渐升"
+    description: "天气炎热，暑气渐升",
+    detail: '小暑即"小热"，天气开始炎热但还没到最热。此时正值初伏前后，进入伏天，需注意防暑降温。温风至，蟋蟀居壁，鹰始击。',
+    pentads: ["温风至", "蟋蟀居壁", "鹰始击"],
+    customs: "吃藕、晒书画、食新米",
+    poetry: "倏忽温风至，因循小暑来。——元稹《小暑六月节》",
+    color: "#aa7a4a",
+    gradient: "linear-gradient(135deg, #ba8a5a 0%, #9e6e3e 50%, #8e5e2e 100%)",
+    decoSvg: '<path d="M8 6 Q12 2 16 6" stroke="currentColor" stroke-width="1" fill="none"/><path d="M6 12 Q12 8 18 12" stroke="currentColor" stroke-width="0.8" fill="none"/><path d="M8 18 Q12 14 16 18" stroke="currentColor" stroke-width="0.8" fill="none"/>'
   },
   {
     name: "大暑",
     pinyin: "Dàshǔ",
     date: "7月22-24日",
     season: "夏",
-    description: "一年最热，高温酷暑"
+    description: "一年最热，高温酷暑",
+    detail: '大暑相对小暑更加炎热，是一年中最热的节气。"湿热交蒸"在此时到达顶点，需注意防暑降温。腐草为萤，土润溽暑，大雨时行。',
+    pentads: ["腐草为萤", "土润溽暑", "大雨时行"],
+    customs: "饮伏茶、晒伏姜、烧伏香",
+    poetry: "何以销烦暑，端居一院中。——白居易《消暑》",
+    color: "#aa6a3a",
+    gradient: "linear-gradient(135deg, #ba7a4a 0%, #9e5e2e 50%, #8e4e1e 100%)",
+    decoSvg: '<circle cx="12" cy="10" r="4" stroke="currentColor" stroke-width="1" fill="none"/><path d="M8 16 Q12 14 16 16 Q12 20 8 16Z" stroke="currentColor" stroke-width="0.8" fill="none"/>'
   },
   {
     name: "立秋",
     pinyin: "Lìqiū",
     date: "8月7-9日",
     season: "秋",
-    description: "秋季开始，暑去凉来"
+    description: "秋季开始，暑去凉来",
+    detail: "立秋是秋季的第一个节气，自然界阳气渐收、阴气渐长。由阳盛逐渐转变为阴盛的转折，但暑气尚未完全消退。凉风至，白露降，寒蝉鸣。",
+    pentads: ["凉风至", "白露降", "寒蝉鸣"],
+    customs: "贴秋膘、啃秋、晒秋",
+    poetry: "乳鸦啼散玉屏空，一枕新凉一扇风。——刘翰《立秋》",
+    color: "#aa8a5a",
+    gradient: "linear-gradient(135deg, #ba9a6a 0%, #9e7e4e 50%, #8e6e3e 100%)",
+    decoSvg: '<path d="M10 6 Q12 4 14 6 L12 12Z" stroke="currentColor" stroke-width="1" fill="none"/><path d="M8 14 Q12 10 16 14 Q12 18 8 14Z" stroke="currentColor" stroke-width="0.8" fill="none"/>'
   },
   {
     name: "处暑",
     pinyin: "Chǔshǔ",
     date: "8月22-24日",
     season: "秋",
-    description: "暑气渐消，天气转凉"
+    description: "暑气渐消，天气转凉",
+    detail: '处暑即"出暑"，表示炎热离开。三伏已过或接近尾声，初秋炎热将结束，秋高气爽的天气即将到来。鹰乃祭鸟，天地始肃，禾乃登。',
+    pentads: ["鹰乃祭鸟", "天地始肃", "禾乃登"],
+    customs: "放河灯、开渔节、煎药茶",
+    poetry: "处暑无三日，新凉直万金。——苏泂《长江二首》",
+    color: "#9a8a6a",
+    gradient: "linear-gradient(135deg, #aa9a7a 0%, #8e7e5e 50%, #7e6e4e 100%)",
+    decoSvg: '<path d="M12 4 Q16 8 12 12 Q8 8 12 4Z" stroke="currentColor" stroke-width="1" fill="none"/><path d="M6 16 Q12 12 18 16" stroke="currentColor" stroke-width="0.8" fill="none"/>'
   },
   {
     name: "白露",
     pinyin: "Báilù",
     date: "9月7-9日",
     season: "秋",
-    description: "水汽凝结，露凝而白"
+    description: "水汽凝结，露凝而白",
+    detail: "白露是反映自然界寒气增长的重要节气，天气渐凉。清晨时分可见露珠晶莹剔透，鸿雁来，玄鸟归，群鸟养羞。",
+    pentads: ["鸿雁来", "玄鸟归", "群鸟养羞"],
+    customs: "收清露、饮白露茶、吃龙眼",
+    poetry: "露从今夜白，月是故乡明。——杜甫《月夜忆舍弟》",
+    color: "#8a9aaa",
+    gradient: "linear-gradient(135deg, #9aaaba 0%, #7e8e9e 50%, #6e7e8e 100%)",
+    decoSvg: '<circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="0.8" fill="none"/><circle cx="15" cy="14" r="2.5" stroke="currentColor" stroke-width="0.8" fill="none"/><path d="M8 18 Q12 16 16 18" stroke="currentColor" stroke-width="0.6" fill="none"/>'
   },
   {
     name: "秋分",
     pinyin: "Qiūfēn",
     date: "9月22-24日",
     season: "秋",
-    description: "昼夜平分，秋高气爽"
+    description: "昼夜平分，秋高气爽",
+    detail: "秋分时节太阳几乎直射赤道，昼夜等长。此后北半球白昼逐渐缩短，天气转凉，秋收忙。雷始收声，蛰虫坯户，水始涸。",
+    pentads: ["雷始收声", "蛰虫坯户", "水始涸"],
+    customs: "秋祭月、吃秋菜、竖蛋",
+    poetry: "金气秋分，风清露冷秋期半。——谢逸《点绛唇》",
+    color: "#9a8a6a",
+    gradient: "linear-gradient(135deg, #aa9a7a 0%, #8e7e5e 50%, #7e6e4e 100%)",
+    decoSvg: '<circle cx="12" cy="12" r="6" stroke="currentColor" stroke-width="1" fill="none"/><line x1="6" y1="12" x2="18" y2="12" stroke="currentColor" stroke-width="0.8"/><path d="M9 8 Q12 6 15 8" stroke="currentColor" stroke-width="0.8" fill="none"/><path d="M9 16 Q12 18 15 16" stroke="currentColor" stroke-width="0.8" fill="none"/>'
   },
   {
     name: "寒露",
     pinyin: "Hánlù",
     date: "10月8-9日",
     season: "秋",
-    description: "露水渐寒，天气转冷"
+    description: "露水渐寒，天气转冷",
+    detail: "寒露是深秋的节令，反映气候变化特征。露水更多，日带寒意，地面的露水更冷，即将凝结成霜。鸿雁来宾，雀入大水为蛤，菊有黄华。",
+    pentads: ["鸿雁来宾", "雀入大水为蛤", "菊有黄华"],
+    customs: "登高、赏菊、饮菊花酒",
+    poetry: "袅袅凉风动，凄凄寒露零。——白居易《池上》",
+    color: "#7a8a9a",
+    gradient: "linear-gradient(135deg, #8a9aaa 0%, #6e7e8e 50%, #5e6e7e 100%)",
+    decoSvg: '<circle cx="12" cy="8" r="2.5" stroke="currentColor" stroke-width="0.8" fill="none"/><path d="M8 14 Q12 10 16 14 Q12 18 8 14Z" stroke="currentColor" stroke-width="0.8" fill="none"/>'
   },
   {
     name: "霜降",
     pinyin: "Shuāngjiàng",
     date: "10月23-24日",
     season: "秋",
-    description: "天气渐冷，开始降霜"
+    description: "天气渐冷，开始降霜",
+    detail: "霜降是秋季的最后一个节气，天气渐寒始于霜降。夜间散热快，容易形成霜冻，草木黄落。豺乃祭兽，草木黄落，蛰虫咸俯。",
+    pentads: ["豺乃祭兽", "草木黄落", "蛰虫咸俯"],
+    customs: "赏红叶、吃柿子、登高远眺",
+    poetry: "霜降碧天静，秋事促西风。——叶梦得《水调歌头》",
+    color: "#8a8aaa",
+    gradient: "linear-gradient(135deg, #9a9aba 0%, #7e7e9e 50%, #6e6e8e 100%)",
+    decoSvg: '<line x1="8" y1="6" x2="16" y2="6" stroke="currentColor" stroke-width="0.8"/><line x1="6" y1="10" x2="18" y2="10" stroke="currentColor" stroke-width="0.8"/><line x1="8" y1="14" x2="16" y2="14" stroke="currentColor" stroke-width="0.8"/><line x1="10" y1="18" x2="14" y2="18" stroke="currentColor" stroke-width="0.8"/>'
   },
   {
     name: "立冬",
     pinyin: "Lìdōng",
     date: "11月7-8日",
     season: "冬",
-    description: "冬季开始，万物收藏"
+    description: "冬季开始，万物收藏",
+    detail: "立冬表示冬季开始，万物收藏规避寒冷。此时水始冰，地始冻，自然界进入休养生息的阶段。水始冰，地始冻，雉入大水为蜃。",
+    pentads: ["水始冰", "地始冻", "雉入大水为蜃"],
+    customs: "补冬、吃饺子、酿黄酒",
+    poetry: "冻笔新诗懒写，寒炉美酒时温。——李白《立冬》",
+    color: "#6a7a9a",
+    gradient: "linear-gradient(135deg, #7a8aaa 0%, #5e6e8e 50%, #4e5e7e 100%)",
+    decoSvg: '<path d="M12 4 L18 10 L12 16 L6 10Z" stroke="currentColor" stroke-width="1" fill="none"/><line x1="12" y1="16" x2="12" y2="22" stroke="currentColor" stroke-width="0.8"/>'
   },
   {
     name: "小雪",
     pinyin: "Xiǎoxuě",
     date: "11月22-23日",
     season: "冬",
-    description: "开始降雪，雪量尚小"
+    description: "开始降雪，雪量尚小",
+    detail: "小雪是反映降水与气温的节气，雪还未盛。雨遇寒变为雪花，故称小雪，天地闭塞转入严冬。虹藏不见，天气上升，闭塞成冬。",
+    pentads: ["虹藏不见", "天气上升", "闭塞成冬"],
+    customs: "腌腊肉、吃糍粑、晒鱼干",
+    poetry: "片片互玲珑，飞扬玉漏终。——陆畅《小雪》",
+    color: "#7a8aaa",
+    gradient: "linear-gradient(135deg, #8a9aba 0%, #6e7e9e 50%, #5e6e8e 100%)",
+    decoSvg: '<circle cx="10" cy="8" r="2" stroke="currentColor" stroke-width="0.8" fill="none"/><circle cx="15" cy="14" r="2.5" stroke="currentColor" stroke-width="0.8" fill="none"/><circle cx="8" cy="16" r="1.5" stroke="currentColor" stroke-width="0.6" fill="none"/>'
   },
   {
     name: "大雪",
     pinyin: "Dàxuě",
     date: "12月6-8日",
     season: "冬",
-    description: "雪量增大，地面积雪"
+    description: "雪量增大，地面积雪",
+    detail: "大雪标志着仲冬时节正式开始，雪量增大，地面可能积雪。银装素裹的景象呈现，万物深藏。鹖鴠不鸣，虎始交，荔挺出。",
+    pentads: ["鹖鴠不鸣", "虎始交", "荔挺出"],
+    customs: "腌肉、进补、赏雪",
+    poetry: "忽如一夜春风来，千树万树梨花开。——岑参《白雪歌送武判官归京》",
+    color: "#6a7aaa",
+    gradient: "linear-gradient(135deg, #7a8aba 0%, #5e6e9e 50%, #4e5e8e 100%)",
+    decoSvg: '<line x1="12" y1="4" x2="12" y2="10" stroke="currentColor" stroke-width="0.8"/><line x1="8" y1="7" x2="16" y2="13" stroke="currentColor" stroke-width="0.8"/><line x1="16" y1="7" x2="8" y2="13" stroke="currentColor" stroke-width="0.8"/><circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="0.6" fill="none"/>'
   },
   {
     name: "冬至",
     pinyin: "Dōngzhì",
     date: "12月21-23日",
     season: "冬",
-    description: "白昼最短，阴极阳生"
+    description: "白昼最短，阴极阳生",
+    detail: "冬至是北半球白昼最短的一天，太阳直射南回归线。此后白昼逐渐增长，阳气始生，是阴阳转换的关键节点。蚯蚓结，麋角解，水泉动。",
+    pentads: ["蚯蚓结", "麋角解", "水泉动"],
+    customs: "吃饺子、吃汤圆、祭天",
+    poetry: "天时人事日相催，冬至阳生春又来。——杜甫《小至》",
+    color: "#5a6a8a",
+    gradient: "linear-gradient(135deg, #6a7a9a 0%, #4e5e7e 50%, #3e4e6e 100%)",
+    decoSvg: '<circle cx="12" cy="12" r="6" stroke="currentColor" stroke-width="1" fill="none"/><circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="0.8" fill="none"/><line x1="12" y1="4" x2="12" y2="8" stroke="currentColor" stroke-width="0.6"/>'
   },
   {
     name: "小寒",
     pinyin: "Xiǎohán",
     date: "1月5-7日",
     season: "冬",
-    description: "天气寒冷，尚未极寒"
+    description: "天气寒冷，尚未极寒",
+    detail: "小寒标志着一年中最寒冷日子的开始，虽寒但尚未到达极点。冷气积久而寒，需注意防寒保暖。雁北乡，鹊始巢，雉始鸲。",
+    pentads: ["雁北乡", "鹊始巢", "雉始鸲"],
+    customs: "吃腊八粥、探梅、冰戏",
+    poetry: "小寒连大吕，欢鹊垒新巢。——元稹《小寒十二月节》",
+    color: "#6a7a8a",
+    gradient: "linear-gradient(135deg, #7a8a9a 0%, #5e6e7e 50%, #4e5e6e 100%)",
+    decoSvg: '<path d="M8 6 L12 4 L16 6" stroke="currentColor" stroke-width="0.8" fill="none"/><path d="M6 12 Q12 8 18 12" stroke="currentColor" stroke-width="0.8" fill="none"/><path d="M8 18 Q12 14 16 18" stroke="currentColor" stroke-width="0.8" fill="none"/>'
   },
   {
     name: "大寒",
@@ -172,6 +333,13 @@ export const terms = [
     date: "1月20-21日",
     season: "冬",
     description: "一年最冷，严寒至极",
-    particleType: "ice"  // 特殊粒子：冰块
+    detail: "大寒是二十四节气中最后一个节气，也是一年中最冷的时期。寒潮南下频繁，风大低温，坚冰深数尺。鸡乳，征鸟厉疾，水泽腹坚。",
+    pentads: ["鸡乳", "征鸟厉疾", "水泽腹坚"],
+    customs: "除旧布新、蒸供、准备年货",
+    poetry: "大寒须守火，无事不出门。——陆游《大寒出江陵西门》",
+    particleType: "ice",
+    color: "#5a6a7a",
+    gradient: "linear-gradient(135deg, #6a7a8a 0%, #4e5e6e 50%, #3e4e5e 100%)",
+    decoSvg: '<path d="M12 4 L18 10 L16 18 L8 18 L6 10Z" stroke="currentColor" stroke-width="1" fill="none"/><line x1="12" y1="4" x2="12" y2="18" stroke="currentColor" stroke-width="0.6"/><line x1="6" y1="10" x2="18" y2="10" stroke="currentColor" stroke-width="0.6"/>'
   }
 ]
