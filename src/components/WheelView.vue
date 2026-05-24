@@ -90,26 +90,123 @@
       </div>
     </div>
 
-    <!-- 中心显示区 -->
-    <div class="center-display" :key="'center-' + currentIndex">
-      <div class="current-season-badge">{{ terms[currentIndex].season }}</div>
-      <div class="current-name">{{ terms[currentIndex].name }}</div>
-      <div class="current-pinyin">{{ terms[currentIndex].pinyin }}</div>
-      <div class="current-date">{{ terms[currentIndex].date }}</div>
+    <!-- 三栏内容布局 -->
+    <div class="content-layout">
+      <!-- 左侧文本框 -->
+      <div class="left-panel" :key="'left-' + currentIndex">
+        <div class="left-panel-header">
+          <svg class="left-panel-icon" viewBox="0 0 24 24" fill="none">
+            <rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1"/>
+            <line x1="8" y1="9" x2="16" y2="9" stroke="currentColor" stroke-width="0.8"/>
+            <line x1="8" y1="12" x2="14" y2="12" stroke="currentColor" stroke-width="0.8"/>
+            <line x1="8" y1="15" x2="12" y2="15" stroke="currentColor" stroke-width="0.8"/>
+          </svg>
+          <span>节气详解</span>
+        </div>
+        <div class="left-panel-season">
+          <span class="season-indicator" :style="{ background: terms[currentIndex].color }"></span>
+          {{ terms[currentIndex].season }}季
+        </div>
+        <div class="left-panel-date">
+          <svg class="left-panel-date-icon" viewBox="0 0 20 20" fill="none">
+            <rect x="2" y="4" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1"/>
+            <line x1="2" y1="8" x2="18" y2="8" stroke="currentColor" stroke-width="0.8"/>
+            <line x1="6" y1="2" x2="6" y2="6" stroke="currentColor" stroke-width="1"/>
+            <line x1="14" y1="2" x2="14" y2="6" stroke="currentColor" stroke-width="1"/>
+          </svg>
+          {{ terms[currentIndex].date }}
+        </div>
+        <div class="left-panel-divider" :style="{ background: terms[currentIndex].color }"></div>
+        <div class="left-panel-desc">{{ terms[currentIndex].description }}</div>
+        <div class="left-panel-detail">{{ terms[currentIndex].detail }}</div>
+        <svg class="left-panel-deco" viewBox="0 0 24 24" fill="none" v-html="terms[currentIndex].decoSvg"></svg>
+      </div>
+
+      <!-- 中间主内容区 -->
+      <div class="center-column" :key="'center-' + currentIndex">
+        <div class="current-season-badge">{{ terms[currentIndex].season }}</div>
+        <div class="current-name">{{ terms[currentIndex].name }}</div>
+        <div class="current-pinyin">{{ terms[currentIndex].pinyin }}</div>
+        <div class="current-date">{{ terms[currentIndex].date }}</div>
+        <div class="center-image-wrap">
+          <img
+            class="center-image"
+            :src="getBgPath(terms[currentIndex].name)"
+            :alt="terms[currentIndex].name"
+          />
+        </div>
+      </div>
+
+      <!-- 右侧图片区 -->
+      <div class="right-panel" :key="'right-' + currentIndex">
+        <div class="right-image-frame">
+          <img
+            class="right-image"
+            :src="getImagePath(terms[currentIndex].name)"
+            :alt="terms[currentIndex].name"
+          />
+        </div>
+        <div class="right-image-label">{{ terms[currentIndex].name }} · 节气图</div>
+      </div>
     </div>
 
-    <!-- 节气描述区 -->
-    <div class="term-description" :key="currentIndex">
-      {{ terms[currentIndex].description }}
+    <!-- 右侧补充面板 -->
+    <div class="right-supplementary" :key="'rsup-' + currentIndex">
+      <div class="supp-card pentad-card">
+        <div class="supp-card-header">
+          <svg class="supp-card-icon" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1"/>
+            <path d="M12 8 L12 12 L15 14" stroke="currentColor" stroke-width="0.8" fill="none"/>
+          </svg>
+          <span>节气物候</span>
+        </div>
+        <div class="pentad-list">
+          <div class="pentad-item" v-for="(pentad, idx) in terms[currentIndex].pentads" :key="idx">
+            <span class="pentad-index" :style="{ background: terms[currentIndex].color }">{{ idx + 1 }}</span>
+            <span class="pentad-text">{{ pentad }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="supp-card customs-card">
+        <div class="supp-card-header">
+          <svg class="supp-card-icon" viewBox="0 0 24 24" fill="none">
+            <path d="M12 4 Q8 8 8 12 Q8 16 12 20 Q16 16 16 12 Q16 8 12 4Z" stroke="currentColor" stroke-width="1" fill="none"/>
+            <circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="0.6" fill="none"/>
+          </svg>
+          <span>节气习俗</span>
+        </div>
+        <div class="customs-text">{{ terms[currentIndex].customs }}</div>
+      </div>
     </div>
 
-    <!-- 节气背景图（缩小至页面1/4，放置在节气文字下方） -->
-    <div class="term-bg-wrap">
-      <img
-        class="term-bg-image"
-        :src="getBgPath(terms[currentIndex].name)"
-        :alt="terms[currentIndex].name"
-      />
+    <!-- 底部信息条 -->
+    <div class="bottom-bar" :key="'bottom-' + currentIndex">
+      <div class="bottom-timeline">
+        <div class="timeline-track">
+          <div
+            v-for="(term, index) in terms"
+            :key="'tl-' + term.name"
+            class="timeline-node"
+            :class="{ 'is-active': index === currentIndex, 'is-same-season': term.season === terms[currentIndex].season }"
+            :style="{ '--node-color': term.color }"
+            @click="handleTermClick(index)"
+          >
+            <span class="node-dot"></span>
+            <span class="node-label">{{ term.name }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-poetry">
+        <svg class="poetry-icon" viewBox="0 0 24 24" fill="none">
+          <path d="M6 4 L6 20" stroke="currentColor" stroke-width="0.8"/>
+          <path d="M10 4 L10 20" stroke="currentColor" stroke-width="0.8"/>
+          <path d="M14 4 L14 20" stroke="currentColor" stroke-width="0.8"/>
+          <path d="M18 4 L18 20" stroke="currentColor" stroke-width="0.8"/>
+          <path d="M4 8 L20 8" stroke="currentColor" stroke-width="0.6"/>
+          <path d="M4 14 L20 14" stroke="currentColor" stroke-width="0.6"/>
+        </svg>
+        <span class="poetry-text">{{ terms[currentIndex].poetry }}</span>
+      </div>
     </div>
 
     <!-- 右下角控制面板 -->
@@ -657,31 +754,6 @@ const resetRotation = () => {
   pointer-events: none;
 }
 
-/* ==================== 节气背景图（16:9比例，缩小至50%） ==================== */
-.term-bg-wrap {
-  position: fixed;
-  top: 280px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 25vw;
-  aspect-ratio: 16 / 9;
-  max-width: 360px;
-  z-index: 5;
-  pointer-events: none;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 8px 48px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.4s ease;
-}
-
-.term-bg-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 16px;
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
 /* ==================== SVG几何装饰 ==================== */
 .deco-svg {
   position: fixed;
@@ -836,7 +908,7 @@ const resetRotation = () => {
   top: 8px;
   left: 50%;
   transform: translateX(-50%) scale(1.25);
-  width: 64%;
+  width: 54%;
   height: 52px;
   background: rgba(180, 170, 155, 0.1);
   backdrop-filter: blur(24px) saturate(1.3);
@@ -912,12 +984,13 @@ const resetRotation = () => {
 /* ==================== 轮盘装饰层 ==================== */
 .wheel-decorations {
   position: absolute;
-  width: 120vmin;
-  height: 120vmin;
-  left: calc(-45% + 30px);
+  width: 110vmin;
+  height: 110vmin;
+  left: calc(-42% + 20px);
   top: 50%;
   transform: translateY(-50%);
-  z-index: 10;
+  z-index: 5;
+  opacity: 0.7;
 }
 
 .wheel-circle-bg {
@@ -969,15 +1042,15 @@ const resetRotation = () => {
   height: 16vmin;
   pointer-events: none;
   transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
-  z-index: 15;
-  opacity: 0.65;
+  z-index: 8;
+  opacity: 0.55;
 }
 
 .wheel-image.is-current-image {
   width: 24vmin;
   height: 24vmin;
-  z-index: 25;
-  opacity: 1;
+  z-index: 12;
+  opacity: 0.85;
 }
 
 .wheel-image img {
@@ -993,7 +1066,7 @@ const resetRotation = () => {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 20;
+  z-index: 10;
 }
 
 .wheel-term {
@@ -1029,10 +1102,10 @@ const resetRotation = () => {
 }
 
 .wheel-term:hover {
-  color: rgba(100, 90, 75, 0.85);
-  background: rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+  color: rgba(100, 90, 75, 0.9);
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
   transform-origin: center;
 }
 
@@ -1057,14 +1130,157 @@ const resetRotation = () => {
   opacity: 1;
 }
 
-/* ==================== 中心显示区 ==================== */
-.center-display {
+/* ==================== 三栏内容布局 ==================== */
+.content-layout {
   position: fixed;
-  top: calc(50% - 200px);
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 44px;
   z-index: 30;
+  pointer-events: none;
+  padding: 90px 80px 60px;
+  box-sizing: border-box;
+}
+
+/* ==================== 左侧文本框 ==================== */
+.left-panel {
+  width: 260px;
+  flex-shrink: 0;
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border-radius: 20px;
+  padding: 24px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+  animation: leftSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background 0.6s ease, border-color 0.6s ease;
+}
+
+@keyframes leftSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+
+.left-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(139, 115, 85, 0.1);
+}
+
+.left-panel-icon {
+  width: 18px;
+  height: 18px;
+  color: rgba(139, 115, 85, 0.5);
+}
+
+.left-panel-header span {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(80, 70, 55, 0.7);
+  letter-spacing: 3px;
+}
+
+.left-panel-season {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: rgba(80, 70, 55, 0.75);
+  font-weight: 500;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.season-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 0.6s ease;
+}
+
+.left-panel-date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: rgba(139, 115, 85, 0.5);
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+
+.left-panel-date-icon {
+  width: 14px;
+  height: 14px;
+  color: rgba(139, 115, 85, 0.4);
+}
+
+.left-panel-divider {
+  height: 2px;
+  border-radius: 1px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+  transition: background 0.6s ease;
+}
+
+.left-panel-desc {
+  font-size: 16px;
+  color: rgba(80, 70, 55, 0.8);
+  font-weight: 600;
+  letter-spacing: 2px;
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+
+.left-panel-detail {
+  font-size: 13px;
+  color: rgba(100, 90, 75, 0.6);
+  line-height: 2;
+  letter-spacing: 0.5px;
+}
+
+.left-panel-deco {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  width: 56px;
+  height: 56px;
+  color: rgba(139, 115, 85, 0.08);
+  opacity: 0.6;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.left-panel:hover .left-panel-deco {
+  opacity: 1;
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* ==================== 中间主内容区 ==================== */
+.center-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   pointer-events: none;
   animation: centerFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1072,99 +1288,145 @@ const resetRotation = () => {
 @keyframes centerFadeIn {
   from {
     opacity: 0;
-    transform: translateX(-50%) scale(0.9);
+    transform: scale(0.9);
     filter: blur(6px);
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) scale(1);
+    transform: scale(1);
     filter: blur(0);
   }
 }
 
 .current-season-badge {
   display: inline-block;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.75);
-  background: rgba(139, 115, 85, 0.2);
-  backdrop-filter: blur(10px);
-  padding: 3px 14px;
-  border-radius: 10px;
-  letter-spacing: 4px;
-  margin-bottom: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(139, 115, 85, 0.22);
+  backdrop-filter: blur(12px);
+  padding: 4px 18px;
+  border-radius: 12px;
+  letter-spacing: 5px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: background 0.6s ease;
 }
 
 .current-name {
-  font-size: 56px;
+  font-size: 64px;
   font-weight: 700;
-  color: rgba(80, 70, 55, 0.82);
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
-  letter-spacing: 12px;
+  color: rgba(80, 70, 55, 0.85);
+  text-shadow: 0 3px 20px rgba(0, 0, 0, 0.06);
+  letter-spacing: 14px;
+  transition: color 0.6s ease, letter-spacing 0.4s ease;
+  line-height: 1.2;
 }
 
 .current-pinyin {
-  font-size: 18px;
+  font-size: 20px;
   color: rgba(139, 115, 85, 0.5);
-  margin-top: 8px;
-  letter-spacing: 6px;
+  margin-top: 10px;
+  letter-spacing: 8px;
   font-weight: 300;
+  transition: color 0.6s ease;
 }
 
 .current-date {
-  font-size: 13px;
+  font-size: 14px;
   color: rgba(139, 115, 85, 0.4);
-  margin-top: 6px;
-  letter-spacing: 2px;
+  margin-top: 8px;
+  letter-spacing: 3px;
+  transition: color 0.6s ease;
 }
 
-/* ==================== 节气描述区 ==================== */
-.term-description {
-  position: fixed;
-  top: 60px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 16px;
-  color: rgba(90, 80, 65, 0.6);
-  text-align: center;
-  z-index: 40;
-  padding: 10px 24px;
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+.center-image-wrap {
+  width: 300px;
+  aspect-ratio: 16 / 9;
+  margin-top: 24px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.4s ease;
+}
+
+.center-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* ==================== 右侧图片区 ==================== */
+.right-panel {
+  width: 280px;
+  flex-shrink: 0;
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  animation: descFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  max-width: 80%;
-  white-space: nowrap;
-  letter-spacing: 1px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  animation: rightSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+  transition: background 0.6s ease, border-color 0.6s ease;
 }
 
-@keyframes descFadeIn {
+@keyframes rightSlideIn {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(8px);
-    filter: blur(3px);
+    transform: translateX(24px);
+    filter: blur(4px);
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(0);
     filter: blur(0);
   }
+}
+
+.right-image-frame {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
+}
+
+.right-panel:hover .right-image-frame {
+  transform: scale(1.02);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.right-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.right-image-label {
+  text-align: center;
+  margin-top: 14px;
+  font-size: 13px;
+  color: rgba(100, 90, 75, 0.55);
+  letter-spacing: 3px;
+  font-weight: 400;
 }
 
 /* ==================== 控制面板 ==================== */
 .control-panel {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 200px;
+  bottom: 24px;
+  right: 24px;
+  width: 190px;
   background: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(24px) saturate(1.2);
   -webkit-backdrop-filter: blur(24px) saturate(1.2);
-  border-radius: 20px;
-  padding: 18px;
+  border-radius: 18px;
+  padding: 16px;
   z-index: 100;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -1274,5 +1536,271 @@ const resetRotation = () => {
 .control-btn-reset {
   font-size: 11px;
   padding: 5px 12px;
+}
+
+/* ==================== 右侧补充面板 ==================== */
+.right-supplementary {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 35;
+  pointer-events: auto;
+  animation: rightSuppIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+}
+
+@keyframes rightSuppIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(20px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+    filter: blur(0);
+  }
+}
+
+.supp-card {
+  background: rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border-radius: 18px;
+  padding: 18px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  transition: background 0.6s ease, border-color 0.6s ease, transform 0.3s ease;
+}
+
+.supp-card:hover {
+  background: rgba(255, 255, 255, 0.42);
+  transform: translateY(-2px);
+}
+
+.supp-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(139, 115, 85, 0.1);
+}
+
+.supp-card-icon {
+  width: 16px;
+  height: 16px;
+  color: rgba(139, 115, 85, 0.5);
+}
+
+.supp-card-header span {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(80, 70, 55, 0.7);
+  letter-spacing: 2px;
+}
+
+.pentad-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pentad-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pentad-index {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+  flex-shrink: 0;
+  transition: background 0.6s ease;
+}
+
+.pentad-text {
+  font-size: 13px;
+  color: rgba(80, 70, 55, 0.7);
+  letter-spacing: 1px;
+  line-height: 1.5;
+}
+
+.customs-text {
+  font-size: 13px;
+  color: rgba(80, 70, 55, 0.65);
+  line-height: 1.8;
+  letter-spacing: 1px;
+}
+
+/* ==================== 底部信息条 ==================== */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 35;
+  pointer-events: none;
+  animation: bottomBarIn 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+}
+
+@keyframes bottomBarIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bottom-timeline {
+  padding: 0 80px;
+  margin-bottom: 8px;
+}
+
+.timeline-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  border-radius: 24px;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  overflow-x: auto;
+  pointer-events: auto;
+}
+
+.timeline-track::-webkit-scrollbar {
+  display: none;
+}
+
+.timeline-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  min-width: 40px;
+}
+
+.timeline-node:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.node-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(139, 115, 85, 0.2);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.timeline-node.is-same-season .node-dot {
+  background: rgba(139, 115, 85, 0.35);
+}
+
+.timeline-node.is-active .node-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--node-color);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.node-label {
+  font-size: 10px;
+  color: rgba(100, 90, 75, 0.35);
+  letter-spacing: 1px;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.timeline-node.is-same-season .node-label {
+  color: rgba(100, 90, 75, 0.5);
+}
+
+.timeline-node.is-active .node-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(80, 70, 55, 0.85);
+  letter-spacing: 2px;
+}
+
+.bottom-poetry {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 80px 16px;
+  pointer-events: none;
+}
+
+.poetry-icon {
+  width: 18px;
+  height: 18px;
+  color: rgba(139, 115, 85, 0.3);
+  flex-shrink: 0;
+}
+
+.poetry-text {
+  font-size: 13px;
+  color: rgba(100, 90, 75, 0.5);
+  letter-spacing: 2px;
+  font-style: italic;
+  line-height: 1.6;
+  text-align: center;
+  transition: opacity 0.5s ease;
+}
+
+/* ==================== 响应式适配 ==================== */
+@media (max-width: 1440px) {
+  .right-supplementary {
+    width: 180px;
+    right: 16px;
+  }
+
+  .bottom-timeline,
+  .bottom-poetry {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .right-supplementary {
+    display: none;
+  }
+
+  .bottom-timeline,
+  .bottom-poetry {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (max-width: 900px) {
+  .bottom-bar {
+    display: none;
+  }
 }
 </style>
